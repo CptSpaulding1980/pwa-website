@@ -2,17 +2,11 @@ node_modules/
 src/_data/
 .DS_Store
 dist/
-# Prevent manual image copying to docs/img/ — Eleventy passthroughCopy handles this
+# Prevent manual image copying to docs/img/ — Eleventy passthroughCopy handles ALL images
+# All images live in src/img/; Eleventy copies them to docs/img/ at build time
+docs/img/*.png
+docs/img/*.svg
 docs/img/wrestler/
 docs/img/charts/
 docs/img/championships/
-# Root-level images in docs/img/ are duplicates of src/img/ (except Banner_*)
-docs/img/AULL.png
-docs/img/CWC.png
-docs/img/NAWA.png
-docs/img/PNCW.png
-docs/img/PWA_1982-1989.png
-docs/img/PWA_1990-2018.png
-docs/img/PWA_2019-ff.png
-docs/img/na_wrestling_map.svg
-docs/img/us.svg
+docs/img/posters/
