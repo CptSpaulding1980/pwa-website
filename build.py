@@ -17,6 +17,14 @@ def sanitize_filename(name):
         name = name.replace(ch, '-')
     return name.strip()
 
+def slugify(text):
+    """Convert text to URL-safe slug: lowercase, spaces→hyphens, remove special chars."""
+    text = text.strip().lower()
+    text = text.replace(' ', '-')
+    text = re.sub(r'[^\w-]', '', text)
+    text = re.sub(r'-+', '-', text)
+    return text.strip('-')
+
 def parse_frontmatter(text):
     if text.startswith('---'):
         parts = re.split(r'^---\s*$', text, maxsplit=2, flags=re.MULTILINE)
@@ -27,6 +35,39 @@ def parse_frontmatter(text):
                 fm = {}
             return fm, parts[2]
     return {}, text
+
+def resolve_image_path(z_path, prefix=PREFIX):
+    """Convert /z_Images/X.png to /pwa-website/img/subdir/actual_filename.
+    
+    Searches z_Images/Wrestler, /Championships, /charts, /Poster, and z_Images/ root
+    for a case-insensitive match. Falls back to simple path replacement."""
+    basename = Path(z_path).name
+    
+    search_dirs = [
+        (VAULT / "z_Images" / "Wrestler", "wrestler"),
+        (VAULT / "z_Images" / "Championships", "championships"),
+        (VAULT / "z_Images" / "charts", "charts"),
+        (VAULT / "z_Images" / "Poster", "posters"),
+        (VAULT / "z_Images", ""),
+    ]
+    
+    for src_dir, web_dir in search_dirs:
+        if not src_dir.is_dir():
+            continue
+        for f in src_dir.glob("*"):
+            if f.is_file() and f.name.lower() == basename.lower():
+                path_part = f"{web_dir}/{f.name}" if web_dir else f.name
+                return f'{prefix}/img/{path_part}'
+    
+    # Fallback: simple path replacement
+    return z_path.replace('/z_Images/', f'{prefix}/img/')
+
+def fix_image_srcs(html, prefix=PREFIX):
+    """Rewrite all src=\"/z_Images/...\" attributes to proper /pwa-website/img/... paths."""
+    def replace_src(m):
+        z_path = m.group(1)
+        return f'src="{resolve_image_path(z_path, prefix)}"'
+    return re.sub(r'src="(/z_Images/[^"]+)"', replace_src, html)
 
 def to_yaml(d):
     return yaml.dump(d, allow_unicode=True, default_flow_style=False, sort_keys=False)
@@ -77,6 +118,20 @@ def breadcrumb(parent_title, parent_url, current_title, prefix=PREFIX):
 EVENT_SLUG_MAP = {}
 
 def convert_wikilinks(text):
+    # Handle image embeds first: ![[image.png]] or ![[image.png|width]]
+    def embed_replacer(m):
+        inner = m.group(1)
+        if '|' in inner:
+            target = inner.split('|', 1)[0].strip()
+        else:
+            target = inner.strip()
+        # Resolve the image path
+        img_path = resolve_image_path('/z_Images/{}'.format(target))
+        return '<img src="{}" style="max-width:250px;border-radius:8px;" alt="donut chart">'.format(img_path)
+    
+    text = re.sub(r'!\[\[([^\]]+)\]\]', embed_replacer, text)
+    
+    # Then handle regular wikilinks [[...]]
     def replacer(m):
         inner = m.group(1)
         if '|' in inner:
@@ -85,13 +140,12 @@ def convert_wikilinks(text):
             target = alias = inner
         target = target.strip()
         alias = alias.strip()
-        slug = target.lower().replace(' ', '-')
-        slug = re.sub(r'[^\w-]', '', slug)
+        slug = slugify(target)
         if re.match(r'\d{4}-\d{2}-\d{2}', target):
             if target in EVENT_SLUG_MAP:
                 href = '{}/events/{}/'.format(PREFIX, EVENT_SLUG_MAP[target])
             else:
-                href = '{}/events/{}/'.format(PREFIX, sanitize_filename(target))
+                href = '{}/events/{}/'.format(PREFIX, slugify('{}'.format(target)))
         elif target in ['PWA World Heavyweight Championship', 'PWA International Championship',
                          'PWA Junior Heavyweight Championship', 'PWA World Tag Team Championship']:
             href = '{}/championships/{}/'.format(PREFIX, slug)
@@ -137,7 +191,7 @@ def process_events():
         matches = fm.get('matches', [])
         title = fm.get('title', '')
         event_date = str(fm.get('date', ''))
-        event_slug = sanitize_filename('{} - {}'.format(event_date, title))
+        event_slug = slugify('{} - {}'.format(event_date, title))
         EVENT_SLUG_MAP[event_date] = event_slug
 
         # Process matches
@@ -219,8 +273,7 @@ def process_wrestlers(events):
         text = md_file.read_text(encoding='utf-8')
         fm, body = parse_frontmatter(text)
         name = fm.get('title', md_file.stem)
-        slug = name.strip().lower().replace(' ', '-')
-        slug = re.sub(r'[^\w-]', '', slug)
+        slug = slugify(name)
 
         body = strip_dataview_blocks(body)
         body = convert_inline_dataview(body)
@@ -228,6 +281,7 @@ def process_wrestlers(events):
 
         # Convert markdown body to HTML (basic conversion)
         html_body = markdown_to_html('{}\n{}'.format(breadcrumb('Wrestlers', '/wrestlers/', name), body))
+        html_body = fix_image_srcs(html_body)
 
         out_dir = output_dir / slug
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -249,14 +303,14 @@ def process_championships(events):
         text = md_file.read_text(encoding='utf-8')
         fm, body = parse_frontmatter(text)
         name = fm.get('title', md_file.stem)
-        slug = name.strip().lower().replace(' ', '-')
-        slug = re.sub(r'[^\w-]', '', slug)
+        slug = slugify(name)
 
         body = strip_dataview_blocks(body)
         body = convert_inline_dataview(body)
         body = convert_wikilinks(body)
 
         html_body = markdown_to_html('{}\n{}'.format(breadcrumb('Championships', '/championships/', name), body))
+        html_body = fix_image_srcs(html_body)
 
         out_dir = output_dir / slug
         out_dir.mkdir(parents=True, exist_ok=True)
