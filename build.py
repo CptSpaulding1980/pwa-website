@@ -98,7 +98,7 @@ HTML_HEAD = """<!DOCTYPE html>
 
 HTML_FOOT = """  </main>
   <footer class="site-footer">
-    <p>PWA — Pro Wrestling Action · Static Archive · 1982–2019</p>
+    <p>PWA — Professional Wrestling Association · Static Archive · 1982–2019</p>
   </footer>
 </body>
 </html>"""
@@ -539,7 +539,7 @@ def generate_homepage(events, wrestlers, champs):
                 date=e['date'], p=PREFIX, slug=e['slug'], title=e['title'],
                 venue=e['venue'], count=e['match_count']))
 
-    body = """<h1>PWA - Pro Wrestling Action</h1>
+    body = """<h1>PWA - Professional Wrestling Association</h1>
 <blockquote>
 <p>Die parallele Wrestling-Welt. Von den Anfaengen im NAWA-Territorium (1980)<br>
 ueber die Underground-Aera bis zur Renaissance 2015-2019.</p>
@@ -568,7 +568,7 @@ ueber die Underground-Aera bis zur Renaissance 2015-2019.</p>
         event_list='\n'.join(event_lines), p=PREFIX,
         gen=datetime.now().strftime('%Y-%m-%d %H:%M'))
 
-    (DOCS / "index.html").write_text(html_page('PWA - Pro Wrestling Action', body), encoding='utf-8')
+    (DOCS / "index.html").write_text(html_page('PWA - Professional Wrestling Association', body), encoding='utf-8')
 
 
 def generate_index_pages(events, wrestlers, champs):
