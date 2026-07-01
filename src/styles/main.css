@@ -1,0 +1,243 @@
+/* PWA Wrestling Dark Theme */
+:root {
+  --bg: #0d0d0d;
+  --bg2: #1a1a1a;
+  --bg3: #242424;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --gold: #d4a843;
+  --red: #c0392b;
+  --red-bright: #e74c3c;
+  --accent: var(--gold);
+  --border: #333;
+  --radius: 6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Navigation */
+.top-nav {
+  background: var(--bg2);
+  border-bottom: 2px solid var(--red);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-brand {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--gold);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold); }
+
+/* Content */
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.breadcrumb a { color: var(--gold); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+/* Typography */
+h1 { color: var(--gold); font-size: 2rem; margin: 0 0 1.5rem; }
+h2 { color: var(--gold); font-size: 1.4rem; margin: 2rem 0 1rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); }
+h3 { color: var(--text); font-size: 1.1rem; margin: 1.5rem 0 0.75rem; }
+a { color: var(--gold); }
+p { margin: 0.5rem 0; }
+small { font-size: 0.8rem; color: var(--text-dim); }
+blockquote {
+  border-left: 3px solid var(--red);
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background: var(--bg2);
+  color: var(--text-dim);
+  font-style: italic;
+}
+hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+img { max-width: 100%; border-radius: var(--radius); }
+
+/* Event list */
+.event-list { margin: 0.5rem 0 1.5rem; }
+.event-link {
+  display: grid;
+  grid-template-columns: 110px 1fr 180px;
+  gap: 1rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  transition: background 0.15s;
+  align-items: center;
+}
+.event-link:hover { background: var(--bg2); }
+.event-date { color: var(--text-dim); font-size: 0.85rem; font-family: monospace; }
+.event-title { font-weight: 600; }
+.event-venue { color: var(--text-dim); font-size: 0.85rem; text-align: right; }
+
+/* Home grid */
+.home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem; }
+@media (max-width: 700px) { .home-grid { grid-template-columns: 1fr; } }
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.panel h2 { margin-top: 0; border: none; font-size: 1.2rem; }
+.view-all {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.4rem 1rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.view-all:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* Match cards */
+.match-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin: 0.75rem 0;
+  align-items: flex-start;
+}
+.match-number {
+  background: var(--red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: center;
+}
+.match-details { flex: 1; }
+.match-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; }
+.match-name a { color: var(--gold); text-decoration: none; }
+.match-name a:hover { text-decoration: underline; }
+.match-finish { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 0.4rem; }
+.match-meta { display: flex; gap: 1.5rem; align-items: center; }
+.match-time { font-family: monospace; color: var(--text-dim); font-size: 0.85rem; }
+.match-rating { color: var(--gold); font-size: 1.1rem; }
+.stars { color: var(--gold); letter-spacing: 2px; }
+
+/* Event header */
+.event-header {
+  display: flex;
+  gap: 1.5rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.event-meta { flex: 1; }
+.event-poster { max-width: 200px; border-radius: var(--radius); }
+
+/* Championship list */
+.champ-list { margin: 0.5rem 0; }
+.champ-link {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: 0.15s;
+}
+.champ-link:hover { background: var(--bg3); color: var(--gold); }
+
+/* Championship grid */
+.champ-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.champ-card {
+  display: block;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-decoration: none;
+  text-align: center;
+  transition: 0.15s;
+}
+.champ-card:hover { border-color: var(--gold); }
+.champ-card h2 { color: var(--gold); font-size: 1.1rem; margin: 0; border: none; }
+
+/* Wrestler grid */
+.wrestler-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.5rem; margin: 0.5rem 0 1.5rem; }
+.wrestler-card {
+  display: block;
+  padding: 0.5rem 0.8rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wrestler-card:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+th { color: var(--gold); font-weight: 700; background: var(--bg2); }
+tr:hover td { background: var(--bg2); }
+
+/* Rankings table */
+.pwi-table { overflow-x: auto; }
+.pwi-rank { color: var(--gold); font-weight: 700; }
+.pwi-name { font-weight: 600; }
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}

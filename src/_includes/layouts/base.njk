@@ -3,24 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Events | PWA</title>
+  <title>{{ title }} | PWA</title>
   <link rel="stylesheet" href="/styles/main.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
 </head>
 <body>
-  <nav class="top-nav">
-  <a href="/" class="nav-brand">🏟️ PWA</a>
-  <div class="nav-links">
-    <a href="/events/">📅 Events</a>
-    <a href="/wrestlers/">🤼 Wrestler</a>
-    <a href="/championships/">🏆 Titles</a>
-    <a href="/rankings/pwi-500/">⭐ PWI 500</a>
-  </div>
-</nav>
-
+  {% include "nav.njk" %}
   <main class="content">
-    <h1>📅 All Events</h1>
-
+    {{ content | safe }}
   </main>
   <footer class="site-footer">
     <p>PWA — Pro Wrestling Action · Static Archive · 1982–2019</p>
