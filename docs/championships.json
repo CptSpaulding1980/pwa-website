@@ -1,0 +1,18 @@
+[
+  {
+    "name": "PWA International Championship",
+    "slug": "pwa-international-championship"
+  },
+  {
+    "name": "PWA Junior Heavyweight Championship",
+    "slug": "pwa-junior-heavyweight-championship"
+  },
+  {
+    "name": "PWA World Heavyweight Championship",
+    "slug": "pwa-world-heavyweight-championship"
+  },
+  {
+    "name": "PWA World Tag Team Championship",
+    "slug": "pwa-world-tag-team-championship"
+  }
+]

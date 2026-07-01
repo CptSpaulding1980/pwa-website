@@ -1,0 +1,1078 @@
+[
+  {
+    "name": "AR Fox",
+    "slug": "ar-fox"
+  },
+  {
+    "name": "Adamo Dragon",
+    "slug": "adamo-dragon"
+  },
+  {
+    "name": "Alberto El Patron",
+    "slug": "alberto-el-patron"
+  },
+  {
+    "name": "Alexander Wolfe",
+    "slug": "alexander-wolfe"
+  },
+  {
+    "name": "Allen Hawkins",
+    "slug": "allen-hawkins"
+  },
+  {
+    "name": "Andrade El Idolo",
+    "slug": "andrade-el-idolo"
+  },
+  {
+    "name": "Antonio Antiguo",
+    "slug": "antonio-antiguo"
+  },
+  {
+    "name": "Aramís",
+    "slug": "aramís"
+  },
+  {
+    "name": "Austin Aries",
+    "slug": "austin-aries"
+  },
+  {
+    "name": "Avery Alexander",
+    "slug": "avery-alexander"
+  },
+  {
+    "name": "BUSHI",
+    "slug": "bushi"
+  },
+  {
+    "name": "Bandido",
+    "slug": "bandido"
+  },
+  {
+    "name": "Bernardo Barros",
+    "slug": "bernardo-barros"
+  },
+  {
+    "name": "Big Dragon",
+    "slug": "big-dragon"
+  },
+  {
+    "name": "Big Strong Machine",
+    "slug": "big-strong-machine"
+  },
+  {
+    "name": "Billy Fender",
+    "slug": "billy-fender"
+  },
+  {
+    "name": "Blade",
+    "slug": "blade"
+  },
+  {
+    "name": "Blue Blazer Jr.",
+    "slug": "blue-blazer-jr"
+  },
+  {
+    "name": "Blue Demon Jr.",
+    "slug": "blue-demon-jr"
+  },
+  {
+    "name": "Blue Spider",
+    "slug": "blue-spider"
+  },
+  {
+    "name": "Bob Harris",
+    "slug": "bob-harris"
+  },
+  {
+    "name": "Bran Czlimovic",
+    "slug": "bran-czlimovic"
+  },
+  {
+    "name": "Brian Cage",
+    "slug": "brian-cage"
+  },
+  {
+    "name": "Brian Pillman Jr.",
+    "slug": "brian-pillman-jr"
+  },
+  {
+    "name": "Bryan Danielson",
+    "slug": "bryan-danielson"
+  },
+  {
+    "name": "Bubba Bradley",
+    "slug": "bubba-bradley"
+  },
+  {
+    "name": "Bud Hemsworth",
+    "slug": "bud-hemsworth"
+  },
+  {
+    "name": "Buddy Yorke",
+    "slug": "buddy-yorke"
+  },
+  {
+    "name": "Burt Mancaster",
+    "slug": "burt-mancaster"
+  },
+  {
+    "name": "CIMA",
+    "slug": "cima"
+  },
+  {
+    "name": "Caristico",
+    "slug": "caristico"
+  },
+  {
+    "name": "Casper Winkel",
+    "slug": "casper-winkel"
+  },
+  {
+    "name": "Chavo Guerrero Jr.",
+    "slug": "chavo-guerrero-jr"
+  },
+  {
+    "name": "Chayton White Wolf",
+    "slug": "chayton-white-wolf"
+  },
+  {
+    "name": "Chelsea Grin",
+    "slug": "chelsea-grin"
+  },
+  {
+    "name": "Chris Hero",
+    "slug": "chris-hero"
+  },
+  {
+    "name": "Christopher Daniels",
+    "slug": "christopher-daniels"
+  },
+  {
+    "name": "Clarence Coles",
+    "slug": "clarence-coles"
+  },
+  {
+    "name": "Claudio Castagnoli",
+    "slug": "claudio-castagnoli"
+  },
+  {
+    "name": "Cobra",
+    "slug": "cobra"
+  },
+  {
+    "name": "Cobra III",
+    "slug": "cobra-iii"
+  },
+  {
+    "name": "Cody Rhodes",
+    "slug": "cody-rhodes"
+  },
+  {
+    "name": "Count Rorstock",
+    "slug": "count-rorstock"
+  },
+  {
+    "name": "Daisuke Sekimoto",
+    "slug": "daisuke-sekimoto"
+  },
+  {
+    "name": "Dalton Castle",
+    "slug": "dalton-castle"
+  },
+  {
+    "name": "Damon Smith",
+    "slug": "damon-smith"
+  },
+  {
+    "name": "Daniel Garcia",
+    "slug": "daniel-garcia"
+  },
+  {
+    "name": "Davey Boy Smith Jr.",
+    "slug": "davey-boy-smith-jr"
+  },
+  {
+    "name": "Davey Richards",
+    "slug": "davey-richards"
+  },
+  {
+    "name": "David Finlay III",
+    "slug": "david-finlay-iii"
+  },
+  {
+    "name": "Delirious",
+    "slug": "delirious"
+  },
+  {
+    "name": "Diablo Blanco",
+    "slug": "diablo-blanco"
+  },
+  {
+    "name": "Diego Guerrero",
+    "slug": "diego-guerrero"
+  },
+  {
+    "name": "Doctor Dorado",
+    "slug": "doctor-dorado"
+  },
+  {
+    "name": "Donatello",
+    "slug": "donatello"
+  },
+  {
+    "name": "Dory Funk Jr.",
+    "slug": "dory-funk-jr"
+  },
+  {
+    "name": "Dos Caras",
+    "slug": "dos-caras"
+  },
+  {
+    "name": "Dr. Angulo",
+    "slug": "dr-angulo"
+  },
+  {
+    "name": "Dr. Wagner Jr.",
+    "slug": "dr-wagner-jr"
+  },
+  {
+    "name": "Dragon Kid",
+    "slug": "dragon-kid"
+  },
+  {
+    "name": "Dragon Lee",
+    "slug": "dragon-lee"
+  },
+  {
+    "name": "Dutch Leeman",
+    "slug": "dutch-leeman"
+  },
+  {
+    "name": "Dynamite Smith",
+    "slug": "dynamite-smith"
+  },
+  {
+    "name": "EVIL",
+    "slug": "evil"
+  },
+  {
+    "name": "Eddie Edwards",
+    "slug": "eddie-edwards"
+  },
+  {
+    "name": "El Canek",
+    "slug": "el-canek"
+  },
+  {
+    "name": "El Experto",
+    "slug": "el-experto"
+  },
+  {
+    "name": "El Hijo del Fantasma",
+    "slug": "el-hijo-del-fantasma"
+  },
+  {
+    "name": "El Pulpo",
+    "slug": "el-pulpo"
+  },
+  {
+    "name": "Elias Blake",
+    "slug": "elias-blake"
+  },
+  {
+    "name": "Ernesto Marquez",
+    "slug": "ernesto-marquez"
+  },
+  {
+    "name": "Fabian Aichner",
+    "slug": "fabian-aichner"
+  },
+  {
+    "name": "Fabrizio Tiziano",
+    "slug": "fabrizio-tiziano"
+  },
+  {
+    "name": "Fantasio Fantastico",
+    "slug": "fantasio-fantastico"
+  },
+  {
+    "name": "Felix Santana",
+    "slug": "felix-santana"
+  },
+  {
+    "name": "Felix Santana III",
+    "slug": "felix-santana-iii"
+  },
+  {
+    "name": "Felix Santana Jr.",
+    "slug": "felix-santana-jr"
+  },
+  {
+    "name": "Felix Santana Sr.",
+    "slug": "felix-santana-sr"
+  },
+  {
+    "name": "Flamita",
+    "slug": "flamita"
+  },
+  {
+    "name": "Fred Balentine",
+    "slug": "fred-balentine"
+  },
+  {
+    "name": "Go Shiozaki",
+    "slug": "go-shiozaki"
+  },
+  {
+    "name": "Golden Grappler",
+    "slug": "golden-grappler"
+  },
+  {
+    "name": "Great Sasuke",
+    "slug": "great-sasuke"
+  },
+  {
+    "name": "Grizzlor",
+    "slug": "grizzlor"
+  },
+  {
+    "name": "Hangman Page",
+    "slug": "hangman-page"
+  },
+  {
+    "name": "Harley Race",
+    "slug": "harley-race"
+  },
+  {
+    "name": "Hiroshi Tanahashi",
+    "slug": "hiroshi-tanahashi"
+  },
+  {
+    "name": "Hiroto Nakamichi",
+    "slug": "hiroto-nakamichi"
+  },
+  {
+    "name": "Holy Diver",
+    "slug": "holy-diver"
+  },
+  {
+    "name": "Ilja Dragunov",
+    "slug": "ilja-dragunov"
+  },
+  {
+    "name": "Jack Brisco",
+    "slug": "jack-brisco"
+  },
+  {
+    "name": "Jack Fury",
+    "slug": "jack-fury"
+  },
+  {
+    "name": "Jack Gold",
+    "slug": "jack-gold"
+  },
+  {
+    "name": "Jack Swagger",
+    "slug": "jack-swagger"
+  },
+  {
+    "name": "Jamie Norkus",
+    "slug": "jamie-norkus"
+  },
+  {
+    "name": "Jean Wilson",
+    "slug": "jean-wilson"
+  },
+  {
+    "name": "Jerry Lawler",
+    "slug": "jerry-lawler"
+  },
+  {
+    "name": "Jigsaw",
+    "slug": "jigsaw"
+  },
+  {
+    "name": "Jinsei Shinzaki",
+    "slug": "jinsei-shinzaki"
+  },
+  {
+    "name": "Jitsu",
+    "slug": "jitsu"
+  },
+  {
+    "name": "Jocephus",
+    "slug": "jocephus"
+  },
+  {
+    "name": "Joey Farrell",
+    "slug": "joey-farrell"
+  },
+  {
+    "name": "Joey Janela",
+    "slug": "joey-janela"
+  },
+  {
+    "name": "John Hennigan",
+    "slug": "john-hennigan"
+  },
+  {
+    "name": "John Taming Buck",
+    "slug": "john-taming-buck"
+  },
+  {
+    "name": "Johnny Effigy",
+    "slug": "johnny-effigy"
+  },
+  {
+    "name": "Jonathan Gresham",
+    "slug": "jonathan-gresham"
+  },
+  {
+    "name": "Juice Robinson",
+    "slug": "juice-robinson"
+  },
+  {
+    "name": "Julio Rivera",
+    "slug": "julio-rivera"
+  },
+  {
+    "name": "Jun Akiyama",
+    "slug": "jun-akiyama"
+  },
+  {
+    "name": "Jupiter Solar",
+    "slug": "jupiter-solar"
+  },
+  {
+    "name": "Jushin Liger",
+    "slug": "jushin-liger"
+  },
+  {
+    "name": "Juventud Guerrera",
+    "slug": "juventud-guerrera"
+  },
+  {
+    "name": "KENTA",
+    "slug": "kenta"
+  },
+  {
+    "name": "KUSHIDA",
+    "slug": "kushida"
+  },
+  {
+    "name": "Katsuhiko Nakajima",
+    "slug": "katsuhiko-nakajima"
+  },
+  {
+    "name": "Katsuyori Shibata",
+    "slug": "katsuyori-shibata"
+  },
+  {
+    "name": "Kazuchika Okada",
+    "slug": "kazuchika-okada"
+  },
+  {
+    "name": "Keiji Mutoh",
+    "slug": "keiji-mutoh"
+  },
+  {
+    "name": "Keith Owens",
+    "slug": "keith-owens"
+  },
+  {
+    "name": "Keith Rowans",
+    "slug": "keith-rowans"
+  },
+  {
+    "name": "Kenny Omega",
+    "slug": "kenny-omega"
+  },
+  {
+    "name": "Kenta Kobashi",
+    "slug": "kenta-kobashi"
+  },
+  {
+    "name": "Koji Kanemoto",
+    "slug": "koji-kanemoto"
+  },
+  {
+    "name": "Kota Ibushi",
+    "slug": "kota-ibushi"
+  },
+  {
+    "name": "Kyle O'Reilly",
+    "slug": "kyle-oreilly"
+  },
+  {
+    "name": "L.A. Park",
+    "slug": "la-park"
+  },
+  {
+    "name": "Lance Archer",
+    "slug": "lance-archer"
+  },
+  {
+    "name": "Laredo Kid",
+    "slug": "laredo-kid"
+  },
+  {
+    "name": "Leonardo",
+    "slug": "leonardo"
+  },
+  {
+    "name": "Lex Rider",
+    "slug": "lex-rider"
+  },
+  {
+    "name": "Lio Rush",
+    "slug": "lio-rush"
+  },
+  {
+    "name": "Macho Especial",
+    "slug": "macho-especial"
+  },
+  {
+    "name": "Mackenzie Bergeron",
+    "slug": "mackenzie-bergeron"
+  },
+  {
+    "name": "Marcel Barthel",
+    "slug": "marcel-barthel"
+  },
+  {
+    "name": "Mark Erickson",
+    "slug": "mark-erickson"
+  },
+  {
+    "name": "Mark Haskins",
+    "slug": "mark-haskins"
+  },
+  {
+    "name": "Marty Scurll",
+    "slug": "marty-scurll"
+  },
+  {
+    "name": "Masaaki Mochizuki",
+    "slug": "masaaki-mochizuki"
+  },
+  {
+    "name": "Masahiro Chono",
+    "slug": "masahiro-chono"
+  },
+  {
+    "name": "Masato Tanaka",
+    "slug": "masato-tanaka"
+  },
+  {
+    "name": "Mask Legend",
+    "slug": "mask-legend"
+  },
+  {
+    "name": "Masked Maniac IV",
+    "slug": "masked-maniac-iv"
+  },
+  {
+    "name": "Mason Miller",
+    "slug": "mason-miller"
+  },
+  {
+    "name": "Matt Jackson",
+    "slug": "matt-jackson"
+  },
+  {
+    "name": "Matt Riddle",
+    "slug": "matt-riddle"
+  },
+  {
+    "name": "Medic 1",
+    "slug": "medic-1"
+  },
+  {
+    "name": "Medic 2",
+    "slug": "medic-2"
+  },
+  {
+    "name": "Metalik",
+    "slug": "metalik"
+  },
+  {
+    "name": "Michael Elgin",
+    "slug": "michael-elgin"
+  },
+  {
+    "name": "Miguel Angel",
+    "slug": "miguel-angel"
+  },
+  {
+    "name": "Mike Hool",
+    "slug": "mike-hool"
+  },
+  {
+    "name": "Mike Quackenbush",
+    "slug": "mike-quackenbush"
+  },
+  {
+    "name": "Mil Mascaras",
+    "slug": "mil-mascaras"
+  },
+  {
+    "name": "Mil Muertes",
+    "slug": "mil-muertes"
+  },
+  {
+    "name": "Minoru Suzuki",
+    "slug": "minoru-suzuki"
+  },
+  {
+    "name": "Misterio Guerrero",
+    "slug": "misterio-guerrero"
+  },
+  {
+    "name": "Mistico II",
+    "slug": "mistico-ii"
+  },
+  {
+    "name": "Mitsuharu Misawa",
+    "slug": "mitsuharu-misawa"
+  },
+  {
+    "name": "Montgomery Hayes",
+    "slug": "montgomery-hayes"
+  },
+  {
+    "name": "Mr. Suplex",
+    "slug": "mr-suplex"
+  },
+  {
+    "name": "Mystery Panther",
+    "slug": "mystery-panther"
+  },
+  {
+    "name": "Myzteziz Jr.",
+    "slug": "myzteziz-jr"
+  },
+  {
+    "name": "Naomichi Marufuji",
+    "slug": "naomichi-marufuji"
+  },
+  {
+    "name": "Neptune Tritano",
+    "slug": "neptune-tritano"
+  },
+  {
+    "name": "Nick Aldis",
+    "slug": "nick-aldis"
+  },
+  {
+    "name": "Nick Bockwinkel",
+    "slug": "nick-bockwinkel"
+  },
+  {
+    "name": "Nick Jackson",
+    "slug": "nick-jackson"
+  },
+  {
+    "name": "Nigel Pendragon",
+    "slug": "nigel-pendragon"
+  },
+  {
+    "name": "Ox Hemlock",
+    "slug": "ox-hemlock"
+  },
+  {
+    "name": "PAC",
+    "slug": "pac"
+  },
+  {
+    "name": "PCO",
+    "slug": "pco"
+  },
+  {
+    "name": "Paullus the Colossus",
+    "slug": "paullus-the-colossus"
+  },
+  {
+    "name": "Pentagón Jr.",
+    "slug": "pentagón-jr"
+  },
+  {
+    "name": "Pete Dunne",
+    "slug": "pete-dunne"
+  },
+  {
+    "name": "Piotr Krutov",
+    "slug": "piotr-krutov"
+  },
+  {
+    "name": "Poppa Thurgoode",
+    "slug": "poppa-thurgoode"
+  },
+  {
+    "name": "Preston Toddsworth",
+    "slug": "preston-toddsworth"
+  },
+  {
+    "name": "Prince Devitt",
+    "slug": "prince-devitt"
+  },
+  {
+    "name": "Prince Puma",
+    "slug": "prince-puma"
+  },
+  {
+    "name": "Puma King",
+    "slug": "puma-king"
+  },
+  {
+    "name": "Rampage Rage",
+    "slug": "rampage-rage"
+  },
+  {
+    "name": "Raphael",
+    "slug": "raphael"
+  },
+  {
+    "name": "Raven",
+    "slug": "raven"
+  },
+  {
+    "name": "Ray Stantz",
+    "slug": "ray-stantz"
+  },
+  {
+    "name": "Red Dragon",
+    "slug": "red-dragon"
+  },
+  {
+    "name": "Rey Fénix",
+    "slug": "rey-fénix"
+  },
+  {
+    "name": "Rey Horus",
+    "slug": "rey-horus"
+  },
+  {
+    "name": "Rey Mysterio",
+    "slug": "rey-mysterio"
+  },
+  {
+    "name": "Rey Mysterio Jr.",
+    "slug": "rey-mysterio-jr"
+  },
+  {
+    "name": "Rhino",
+    "slug": "rhino"
+  },
+  {
+    "name": "Ric Flair",
+    "slug": "ric-flair"
+  },
+  {
+    "name": "Rich Swann",
+    "slug": "rich-swann"
+  },
+  {
+    "name": "Rick Banner",
+    "slug": "rick-banner"
+  },
+  {
+    "name": "Ricklon Smasher",
+    "slug": "ricklon-smasher"
+  },
+  {
+    "name": "Ricky Starks",
+    "slug": "ricky-starks"
+  },
+  {
+    "name": "Roadkill",
+    "slug": "roadkill"
+  },
+  {
+    "name": "Robert Dreissker",
+    "slug": "robert-dreissker"
+  },
+  {
+    "name": "Rocky Wilbur",
+    "slug": "rocky-wilbur"
+  },
+  {
+    "name": "Roddy Piper",
+    "slug": "roddy-piper"
+  },
+  {
+    "name": "Roderick Strong",
+    "slug": "roderick-strong"
+  },
+  {
+    "name": "Rush",
+    "slug": "rush"
+  },
+  {
+    "name": "Ryusuke Taguchi",
+    "slug": "ryusuke-taguchi"
+  },
+  {
+    "name": "SANADA",
+    "slug": "sanada"
+  },
+  {
+    "name": "Sabu",
+    "slug": "sabu"
+  },
+  {
+    "name": "Saburo Aoki Jr.",
+    "slug": "saburo-aoki-jr"
+  },
+  {
+    "name": "Salvador Sosa",
+    "slug": "salvador-sosa"
+  },
+  {
+    "name": "Sam Barrett",
+    "slug": "sam-barrett"
+  },
+  {
+    "name": "Sami Callihan",
+    "slug": "sami-callihan"
+  },
+  {
+    "name": "Sammy Blake",
+    "slug": "sammy-blake"
+  },
+  {
+    "name": "Saturn",
+    "slug": "saturn"
+  },
+  {
+    "name": "Scott Norton",
+    "slug": "scott-norton"
+  },
+  {
+    "name": "Sean Waltman",
+    "slug": "sean-waltman"
+  },
+  {
+    "name": "Seth Ramsey",
+    "slug": "seth-ramsey"
+  },
+  {
+    "name": "Shingo Takagi",
+    "slug": "shingo-takagi"
+  },
+  {
+    "name": "Shinsuke Nakamura",
+    "slug": "shinsuke-nakamura"
+  },
+  {
+    "name": "Shredder",
+    "slug": "shredder"
+  },
+  {
+    "name": "Silas Young",
+    "slug": "silas-young"
+  },
+  {
+    "name": "Skullface Killah",
+    "slug": "skullface-killah"
+  },
+  {
+    "name": "Slavakov Nemchinov",
+    "slug": "slavakov-nemchinov"
+  },
+  {
+    "name": "Slicer",
+    "slug": "slicer"
+  },
+  {
+    "name": "Snake King",
+    "slug": "snake-king"
+  },
+  {
+    "name": "Spitfire",
+    "slug": "spitfire"
+  },
+  {
+    "name": "Stan Hansen",
+    "slug": "stan-hansen"
+  },
+  {
+    "name": "Steve Brockman",
+    "slug": "steve-brockman"
+  },
+  {
+    "name": "Steve Corino",
+    "slug": "steve-corino"
+  },
+  {
+    "name": "Super Delfin",
+    "slug": "super-delfin"
+  },
+  {
+    "name": "Takashi Iizuka",
+    "slug": "takashi-iizuka"
+  },
+  {
+    "name": "Takeshi Morishima",
+    "slug": "takeshi-morishima"
+  },
+  {
+    "name": "Tama Tonga",
+    "slug": "tama-tonga"
+  },
+  {
+    "name": "Tanga Loa",
+    "slug": "tanga-loa"
+  },
+  {
+    "name": "Tatanka",
+    "slug": "tatanka"
+  },
+  {
+    "name": "Ted DiBiase",
+    "slug": "ted-dibiase"
+  },
+  {
+    "name": "Teddy Hart",
+    "slug": "teddy-hart"
+  },
+  {
+    "name": "Tesuya Naito",
+    "slug": "tesuya-naito"
+  },
+  {
+    "name": "The Destroyer",
+    "slug": "the-destroyer"
+  },
+  {
+    "name": "The Gatekeeper",
+    "slug": "the-gatekeeper"
+  },
+  {
+    "name": "The Great Muta",
+    "slug": "the-great-muta"
+  },
+  {
+    "name": "The Patriot",
+    "slug": "the-patriot"
+  },
+  {
+    "name": "Theobold Lovecraft",
+    "slug": "theobold-lovecraft"
+  },
+  {
+    "name": "Tiger Mask",
+    "slug": "tiger-mask"
+  },
+  {
+    "name": "Tiger Mask IV",
+    "slug": "tiger-mask-iv"
+  },
+  {
+    "name": "Tim Storm",
+    "slug": "tim-storm"
+  },
+  {
+    "name": "Timothy Thatcher",
+    "slug": "timothy-thatcher"
+  },
+  {
+    "name": "Todd Jackson",
+    "slug": "todd-jackson"
+  },
+  {
+    "name": "Too Cold Scorpio",
+    "slug": "too-cold-scorpio"
+  },
+  {
+    "name": "Travis Banks",
+    "slug": "travis-banks"
+  },
+  {
+    "name": "Trent Seven",
+    "slug": "trent-seven"
+  },
+  {
+    "name": "Trevor Lee",
+    "slug": "trevor-lee"
+  },
+  {
+    "name": "Trevor Murdoch",
+    "slug": "trevor-murdoch"
+  },
+  {
+    "name": "Tri Clops",
+    "slug": "tri-clops"
+  },
+  {
+    "name": "Tundra Wurm",
+    "slug": "tundra-wurm"
+  },
+  {
+    "name": "Tyler Bate",
+    "slug": "tyler-bate"
+  },
+  {
+    "name": "UK Kid",
+    "slug": "uk-kid"
+  },
+  {
+    "name": "Ultimo Dragon",
+    "slug": "ultimo-dragon"
+  },
+  {
+    "name": "Unknown X",
+    "slug": "unknown-x"
+  },
+  {
+    "name": "Vader",
+    "slug": "vader"
+  },
+  {
+    "name": "Veit Müller",
+    "slug": "veit-müller"
+  },
+  {
+    "name": "Victor Kurilenko",
+    "slug": "victor-kurilenko"
+  },
+  {
+    "name": "Villano III Jr.",
+    "slug": "villano-iii-jr"
+  },
+  {
+    "name": "WALTER",
+    "slug": "walter"
+  },
+  {
+    "name": "Will Ospreay",
+    "slug": "will-ospreay"
+  },
+  {
+    "name": "Winston Zedd",
+    "slug": "winston-zedd"
+  },
+  {
+    "name": "Yokosumo Kawashi",
+    "slug": "yokosumo-kawashi"
+  },
+  {
+    "name": "Yoshihiro Tajiri",
+    "slug": "yoshihiro-tajiri"
+  },
+  {
+    "name": "Yuji Ishikawa",
+    "slug": "yuji-ishikawa"
+  },
+  {
+    "name": "Yuji Nagata",
+    "slug": "yuji-nagata"
+  },
+  {
+    "name": "Zack Sabre Jr.",
+    "slug": "zack-sabre-jr"
+  },
+  {
+    "name": "Zodiac",
+    "slug": "zodiac"
+  }
+]
