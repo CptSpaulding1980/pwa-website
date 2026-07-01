@@ -445,13 +445,34 @@ def process_rankings():
 
 
 def copy_images():
-    poster_dir = VAULT / "z_Images" / "Poster"
-    dest_dir = DOCS / "img" / "posters"
-    dest_dir.mkdir(parents=True, exist_ok=True)
-    for img in poster_dir.glob("*.png"):
-        shutil.copy2(img, dest_dir / img.name)
-    for img in (VAULT / "z_Images").glob("Banner_*.png"):
-        shutil.copy2(img, DOCS / "img" / img.name)
+    """Copy ALL images from Obsidian PWA Vault to docs/img/."""
+    z_images = VAULT / "z_Images"
+    doc_img = DOCS / "img"
+    doc_img.mkdir(parents=True, exist_ok=True)
+
+    # Direct images in z_Images (banners, logos, maps, SVGs)
+    for img in z_images.glob("*"):
+        if img.is_file() and img.suffix.lower() in ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'):
+            shutil.copy2(img, doc_img / img.name)
+
+    # Subdirectories: posters, wrestler, championships, charts
+    for sub in ['Poster', 'Wrestler', 'Championships', 'charts']:
+        src_dir = z_images / sub
+        if not src_dir.is_dir():
+            continue
+        dest_sub = sub.lower()
+        if sub == 'Poster':
+            dest_sub = 'posters'
+        elif sub == 'Wrestler':
+            dest_sub = 'wrestler'
+        elif sub == 'Championships':
+            dest_sub = 'championships'
+        # charts stays as charts
+        dest_dir = doc_img / dest_sub
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        for img in src_dir.glob("*"):
+            if img.is_file() and img.suffix.lower() in ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp'):
+                shutil.copy2(img, dest_dir / img.name)
 
 
 def generate_homepage(events, wrestlers, champs):
