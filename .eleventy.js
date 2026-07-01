@@ -2,7 +2,6 @@ const markdownIt = require("markdown-it");
 
 module.exports = function(eleventyConfig) {
   // Passthrough copy
-  eleventyConfig.addPassthroughCopy("src/img");
   eleventyConfig.addPassthroughCopy("src/styles");
 
   // Markdown

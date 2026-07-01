@@ -2,11 +2,3 @@ node_modules/
 src/_data/
 .DS_Store
 dist/
-# Prevent manual image copying to docs/img/ — Eleventy passthroughCopy handles ALL images
-# All images live in src/img/; Eleventy copies them to docs/img/ at build time
-docs/img/*.png
-docs/img/*.svg
-docs/img/wrestler/
-docs/img/charts/
-docs/img/championships/
-docs/img/posters/

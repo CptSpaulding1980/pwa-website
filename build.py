@@ -8,6 +8,7 @@ from datetime import datetime
 
 VAULT = Path("/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA")
 SITE = Path("/Users/homeserver/pwa-website/src")
+DOCS = Path("/Users/homeserver/pwa-website/docs")
 
 def sanitize_filename(name):
     for ch in ':*?"<>|\\/':
@@ -131,7 +132,7 @@ def process_events():
         event_date = str(fm.get('date', ''))
         poster_files = list((VAULT / "z_Images" / "Poster").glob("{}*".format(event_date)))
         if poster_files:
-            dest_dir = SITE / "img" / "posters"
+            dest_dir = DOCS / "img" / "posters"
             dest_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy2(poster_files[0], dest_dir / poster_files[0].name)
             poster_html = '<img src="/pwa-website/img/posters/{}" class="event-poster" alt="Poster">'.format(poster_files[0].name)
@@ -321,12 +322,12 @@ def process_rankings():
 
 def copy_images():
     poster_dir = VAULT / "z_Images" / "Poster"
-    dest_dir = SITE / "img" / "posters"
+    dest_dir = DOCS / "img" / "posters"
     dest_dir.mkdir(parents=True, exist_ok=True)
     for img in poster_dir.glob("*.png"):
         shutil.copy2(img, dest_dir / img.name)
     for img in (VAULT / "z_Images").glob("Banner_*.png"):
-        shutil.copy2(img, SITE / "img" / img.name)
+        shutil.copy2(img, DOCS / "img" / img.name)
 
 def generate_homepage(events, wrestlers, champs):
     latest = sorted(events, key=lambda e: e['date'], reverse=True)[:10]
