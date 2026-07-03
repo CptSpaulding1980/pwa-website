@@ -293,6 +293,116 @@ def process_wrestlers(events):
     return all_wrestlers
 
 
+def compute_championship_stats(history_lines_md, prefix=PREFIX):
+    """Parse championship history table and compute summary statistics.
+    Returns an HTML string with a stats summary box, or empty string if not enough data."""
+    if not history_lines_md or len(history_lines_md) < 2:
+        return ""
+    
+    reigns = []
+    for line in history_lines_md:
+        cells = [c.strip() for c in line.split('|')[1:-1]]
+        if len(cells) < 5:
+            continue
+        champion = cells[0]
+        won = cells[1]
+        lost = cells[2]
+        days_str = cells[3]
+        defenses_str = cells[4]
+        
+        # Skip header/separator rows
+        if champion in ('Champion', '---', '') or champion.startswith('-'):
+            continue
+        
+        try:
+            days = int(days_str)
+        except ValueError:
+            days = 0
+        try:
+            defenses = int(defenses_str)
+        except ValueError:
+            defenses = 0
+        
+        is_vacant = 'vacant' in champion.lower()
+        is_current = lost.lower() == 'current'
+        
+        reigns.append({
+            'champion': champion,
+            'won': won,
+            'lost': lost,
+            'days': days,
+            'defenses': defenses,
+            'is_vacant': is_vacant,
+            'is_current': is_current,
+        })
+    
+    if not reigns:
+        return ""
+    
+    # Compute stats
+    non_vacant = [r for r in reigns if not r['is_vacant']]
+    vacant = [r for r in reigns if r['is_vacant']]
+    completed = [r for r in non_vacant if not r['is_current']]
+    
+    total_reigns = len(non_vacant)
+    unique_champs = len(set(r['champion'] for r in non_vacant))
+    vacant_count = len(vacant)
+    
+    first = non_vacant[-1] if non_vacant else None  # last in list = earliest chronologically
+    
+    completed_with_days = [r for r in completed if r['days'] > 0]
+    avg_days = sum(r['days'] for r in completed_with_days) // len(completed_with_days) if completed_with_days else 0
+    
+    longest = max(non_vacant, key=lambda r: r['days']) if non_vacant else None
+    shortest = min((r for r in completed if r['days'] > 0), key=lambda r: r['days'], default=None)
+    
+    most_reigns_data = {}
+    for r in non_vacant:
+        most_reigns_data[r['champion']] = most_reigns_data.get(r['champion'], 0) + 1
+    most_reigns_champ = max(most_reigns_data, key=most_reigns_data.get) if most_reigns_data else None
+    
+    most_def = max(non_vacant, key=lambda r: r['defenses']) if non_vacant else None
+    
+    total_defenses = sum(r['defenses'] for r in non_vacant)
+    total_title_matches = total_reigns + total_defenses  # each reign starts with a title match
+    defense_rate = round(total_defenses / total_title_matches * 100) if total_title_matches > 0 else 0
+    
+    current_champ = reigns[0] if reigns and reigns[0]['is_current'] and not reigns[0]['is_vacant'] else None
+    
+    # Build HTML stats table
+    def champ_link(name):
+        if not name or 'vacant' in name.lower():
+            return name or 'Vacant'
+        # If already an HTML link (from wikilink conversion), use as-is
+        if '<a href=' in name:
+            return name
+        slug = slugify(name)
+        return '<a href="{}/wrestlers/{}/">{}</a>'.format(prefix, slug, name)
+    
+    rows = []
+    rows.append('<tr><td><strong>Insgesamt Regentschaften</strong></td><td>{}</td></tr>'.format(total_reigns))
+    rows.append('<tr><td><strong>Verschiedene Champions</strong></td><td>{}</td></tr>'.format(unique_champs))
+    if vacant_count:
+        rows.append('<tr><td><strong>Vakante Phasen</strong></td><td>{}</td></tr>'.format(vacant_count))
+    if first:
+        rows.append('<tr><td><strong>Erster Champion</strong></td><td>{} ({})</td></tr>'.format(champ_link(first['champion']), first['won']))
+    rows.append('<tr><td><strong>⌀ Regentschaftsdauer</strong></td><td>{} Tage</td></tr>'.format(avg_days))
+    if longest:
+        rows.append('<tr><td><strong>Längste Regentschaft</strong></td><td>{} ({} Tage)</td></tr>'.format(champ_link(longest['champion']), longest['days']))
+    if shortest:
+        rows.append('<tr><td><strong>Kürzeste Regentschaft</strong></td><td>{} ({} Tage)</td></tr>'.format(champ_link(shortest['champion']), shortest['days']))
+    if most_reigns_champ:
+        rows.append('<tr><td><strong>Meiste Regentschaften</strong></td><td>{} ({}x)</td></tr>'.format(champ_link(most_reigns_champ), most_reigns_data[most_reigns_champ]))
+    if most_def and most_def['defenses'] > 0:
+        rows.append('<tr><td><strong>Meiste Verteidigungen</strong></td><td>{} ({})</td></tr>'.format(champ_link(most_def['champion']), most_def['defenses']))
+    rows.append('<tr><td><strong>Titelmatches gesamt</strong></td><td>{}</td></tr>'.format(total_title_matches))
+    rows.append('<tr><td><strong>Erfolgreiche Verteidigungen</strong></td><td>{} ({}%)</td></tr>'.format(total_defenses, defense_rate))
+    if current_champ:
+        rows.append('<tr><td><strong>Aktuelle Regentschaft</strong></td><td>{} — seit {} 🔥</td></tr>'.format(champ_link(current_champ['champion']), current_champ['won']))
+    
+    return '<h2>📊 Statistiken</h2>\n<table>\n<thead><tr><th>Kategorie</th><th>Wert</th></tr></thead>\n<tbody>\n{}\n</tbody>\n</table>\n'.format('\n'.join(rows))
+
+
 def process_championships(events):
     champs_dir = VAULT / "Championships"
     output_dir = DOCS / "championships"
@@ -309,8 +419,39 @@ def process_championships(events):
         body = convert_inline_dataview(body)
         body = convert_wikilinks(body)
 
+        # Parse history table for stats
+        history_lines = []
+        in_history = False
+        for line in body.split('\n'):
+            if line.strip().startswith('## History'):
+                in_history = True
+                continue
+            if in_history:
+                if line.strip().startswith('## '):
+                    break
+                if line.strip().startswith('|'):
+                    history_lines.append(line.strip())
+
+        # Compute and inject stats (after HTML conversion to avoid markdown mangling)
+        stats_html = compute_championship_stats(history_lines)
+
         html_body = markdown_to_html('{}\n{}'.format(breadcrumb('Championships', '/championships/', name), body))
         html_body = fix_image_srcs(html_body)
+        
+        if stats_html:
+            # Insert stats after <ul> that follows "Current Champion" block
+            html_body = re.sub(
+                r'(<p>Current Champion.*?</ul>\n)',
+                r'\1\n' + stats_html + '\n',
+                html_body, count=1
+            )
+            # Fallback: insert before <h2>History</h2>
+            if stats_html not in html_body:
+                html_body = re.sub(
+                    r'(<h2>History</h2>)',
+                    stats_html + '\n' + r'\1',
+                    html_body, count=1
+                )
 
         out_dir = output_dir / slug
         out_dir.mkdir(parents=True, exist_ok=True)

@@ -241,3 +241,96 @@ tr:hover td { background: var(--bg2); }
   color: var(--text-dim);
   font-size: 0.8rem;
 }
+
+/* ================
+   Mobile (≤768px)
+   ================ */
+@media (max-width: 768px) {
+  /* Content: weniger Padding, volle Breite */
+  .content {
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  /* Navigation: Links umbrechen, kleiner */
+  .top-nav {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .nav-brand {
+    font-size: 1.1rem;
+    width: 100%;
+  }
+  .nav-links {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  /* Tabellen: scrollbar statt Layout sprengen */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    width: 100%;
+    font-size: 0.85rem;
+  }
+  th, td {
+    padding: 0.4rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Event-Header: vertikal stacken */
+  .event-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .event-poster {
+    max-width: 150px;
+    align-self: center;
+  }
+
+  /* Event-Liste: single column */
+  .event-link {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+  .event-venue {
+    text-align: left;
+  }
+
+  /* Match-Cards: kompakter */
+  .match-card {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  .match-meta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Championship Grid: single column */
+  .champ-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Wrestler Grid: 2-spaltig */
+  .wrestler-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Bilder nicht überlaufen */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Überschriften */
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.2rem; }
+}
