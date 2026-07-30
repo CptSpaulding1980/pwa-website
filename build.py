@@ -465,6 +465,13 @@ def process_championships(events):
 
 def markdown_to_html(text):
     """Basic markdown -> HTML conversion (handles the common patterns used in PWA vault)."""
+    
+    def format_inline(t):
+        """Apply inline formatting: **bold**, *italic*"""
+        t = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', t)
+        t = re.sub(r'\*(.+?)\*', r'<em>\1</em>', t)
+        return t
+    
     lines = text.split('\n')
     out = []
     in_table = False
@@ -488,7 +495,7 @@ def markdown_to_html(text):
             else:
                 out.append('<blockquote>')
                 for bl in blockquote_lines:
-                    out.append('  <p>{}</p>'.format(bl))
+                    out.append('  <p>{}</p>'.format(format_inline(bl)))
                 out.append('</blockquote>')
                 in_blockquote = False
                 blockquote_lines = []
@@ -498,17 +505,17 @@ def markdown_to_html(text):
             if in_list:
                 out.append('</ul>')
                 in_list = False
-            out.append('<h3>{}</h3>'.format(line[4:]))
+            out.append('<h3>{}</h3>'.format(format_inline(line[4:])))
         elif line.startswith('## '):
             if in_list:
                 out.append('</ul>')
                 in_list = False
-            out.append('<h2>{}</h2>'.format(line[3:]))
+            out.append('<h2>{}</h2>'.format(format_inline(line[3:])))
         elif line.startswith('# '):
             if in_list:
                 out.append('</ul>')
                 in_list = False
-            out.append('<h1>{}</h1>'.format(line[2:]))
+            out.append('<h1>{}</h1>'.format(format_inline(line[2:])))
         # Table
         elif line.startswith('|') and '|' in line[1:]:
             if in_list:
@@ -519,14 +526,14 @@ def markdown_to_html(text):
                 out.append('<table>')
                 if all(c.startswith('-') for c in cells):
                     out.append('<thead><tr>{}</tr></thead>'.format(
-                        ''.join('<th>{}</th>'.format(c) for c in cells)))
+                        ''.join('<th>{}</th>'.format(format_inline(c)) for c in cells)))
                 else:
                     out.append('<tr>{}</tr>'.format(
-                        ''.join('<td>{}</td>'.format(c) for c in cells)))
+                        ''.join('<td>{}</td>'.format(format_inline(c)) for c in cells)))
                 in_table = True
             else:
                 out.append('<tr>{}</tr>'.format(
-                    ''.join('<td>{}</td>'.format(c) for c in cells)))
+                    ''.join('<td>{}</td>'.format(format_inline(c)) for c in cells)))
         elif in_table and not line.startswith('|'):
             out.append('</table>')
             in_table = False
@@ -537,20 +544,18 @@ def markdown_to_html(text):
             if not in_list:
                 out.append('<ul>')
                 in_list = True
-            out.append('<li>{}</li>'.format(line[2:]))
+            out.append('<li>{}</li>'.format(format_inline(line[2:])))
         elif in_list and not line.startswith('- '):
             if line.strip():
                 out.append('</ul>')
                 in_list = False
-                out.append('<p>{}</p>'.format(line))
+                out.append('<p>{}</p>'.format(format_inline(line)))
             else:
                 out.append('</ul>')
                 in_list = False
         # Paragraphs
         elif line.strip():
-            line = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', line)
-            line = re.sub(r'\*(.+?)\*', r'<em>\1</em>', line)
-            out.append('<p>{}</p>'.format(line))
+            out.append('<p>{}</p>'.format(format_inline(line)))
         else:
             if in_list:
                 out.append('</ul>')
@@ -563,7 +568,7 @@ def markdown_to_html(text):
     if in_blockquote:
         out.append('<blockquote>')
         for bl in blockquote_lines:
-            out.append('  <p>{}</p>'.format(bl))
+            out.append('  <p>{}</p>'.format(format_inline(bl)))
         out.append('</blockquote>')
 
     return '\n'.join(out)
