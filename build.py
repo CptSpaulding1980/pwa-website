@@ -12,6 +12,10 @@ VAULT = Path("/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA")
 DOCS = REPO / "docs"
 PREFIX = "/pwa-website"
 
+# Exact source-audited exceptions only; never infer identities from filenames.
+from urllib.parse import quote
+SOURCE_REPAIRS = json.loads((REPO / 'content/source-repairs.json').read_text())
+
 def sanitize_filename(name):
     for ch in ':*?"<>|\\/':
         name = name.replace(ch, '-')
@@ -41,6 +45,10 @@ def resolve_image_path(z_path, prefix=PREFIX):
     
     Searches z_Images/Wrestler, /Championships, /charts, /Poster, and z_Images/ root
     for a case-insensitive match. Falls back to simple path replacement."""
+    audited_url = z_path.replace('/z_Images/', PREFIX + '/img/', 1)
+    if audited_url in SOURCE_REPAIRS['media']:
+        target = SOURCE_REPAIRS['media'][audited_url].removeprefix(PREFIX)
+        return prefix + quote(target, safe='/')
     basename = Path(z_path).name
     
     search_dirs = [
@@ -77,9 +85,35 @@ def to_yaml(d):
 
 # Shared HTML shell is maintained in presentation.py.
 
+def repair_source_html(body, prefix=PREFIX):
+    """Apply the exact audited URL exceptions only at the HTML boundary.
+
+    Keep inner markup/entities verbatim (including wiki aliases). Inert spans
+    retain text-node boundaries without inventing destinations. This also covers
+    saved legacy HTML without mutating its protected source or JSON records.
+    """
+    from html import unescape
+    text_only = {prefix + url.removeprefix(PREFIX)
+                 for url in SOURCE_REPAIRS['text_only_links']}
+
+    def anchor(match):
+        href = re.search(r'\bhref\s*=\s*([\"\'])(.*?)\1', match['attrs'], re.I | re.S)
+        if href and unescape(href[2]) in text_only:
+            return '<span>' + match['label'] + '</span>'
+        return match[0]
+
+    body = re.sub(r'<a\b(?P<attrs>[^>]*)>(?P<label>.*?)</a\s*>',
+                  anchor, body, flags=re.I | re.S)
+    for old, target in SOURCE_REPAIRS['media'].items():
+        old = prefix + old.removeprefix(PREFIX)
+        target = prefix + quote(target.removeprefix(PREFIX), safe='/')
+        body = body.replace('src="' + old + '"', 'src="' + target + '"')
+    return body
+
+
 def html_page(title, body, prefix=PREFIX):
     from presentation import page
-    return page(title, body, prefix)
+    return page(title, repair_source_html(body, prefix), prefix)
 
 def breadcrumb(parent_title, parent_url, current_title, prefix=PREFIX):
     if parent_url:

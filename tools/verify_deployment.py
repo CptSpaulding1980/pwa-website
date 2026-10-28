@@ -60,6 +60,9 @@ def main():
         'img/wrestler/Ox_Hemlock.PNG', 'img/charts/ox-hemlock_donut.png',
         'img/posters/2019-09-21 - PWA Team Wars 2019.png'])
     paths.update((ROOT / 'docs/img/championships').glob('*'))
+    repairs = json.loads((ROOT / 'content/source-repairs.json').read_text())
+    paths.update(ROOT / 'docs' / url.removeprefix('/pwa-website/')
+                 for url in repairs['media'].values())
     def check(path):
         relative = path.relative_to(ROOT / 'docs').as_posix()
         expected = hashlib.sha256(path.read_bytes()).hexdigest()

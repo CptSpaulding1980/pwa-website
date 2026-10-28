@@ -23,22 +23,31 @@ def compare(baseline, current):
     normalize_text = lambda text: ' '.join(re.sub(r'(?<!\S):?-{3,}:?(?!\S)', '', text).split())
     def normalize_tables(tables):
         return [[row for row in table if not all(re.fullmatch(r':?-+:?', cell) for cell in row)] for table in tables]
+    repairs = json.loads((ROOT / 'content/source-repairs.json').read_text())
+    from urllib.parse import quote
     for route, old in baseline['pages'].items():
         new = current['pages'].get(route)
         if new is None or route == 'index.html':
             continue
         for key in ['links', 'media', 'matches']:
-            if old[key] != new[key]:
+            expected = old[key]
+            if key == 'links':
+                expected = [url for url in expected if url not in repairs['text_only_links']]
+            elif key == 'media':
+                expected = sorted(quote(repairs['media'][url], safe='/')
+                                  if url in repairs['media'] else url for url in expected)
+            if expected != new[key]:
                 errors.append(route + ': changed ' + key)
         if normalize_tables(old['tables']) != normalize_tables(new['tables']):
             errors.append(route + ': table values changed')
         new_text = new['text']
-        if route == 'rankings/pwi-500/index.html':
+        if route == 'rankings/pwi-500/index.html' and not old['text'].startswith('PWI Power Ranking '):
             new_text = new_text.removeprefix('PWI Power Ranking ')
         if normalize_text(old['text']) != normalize_text(new_text):
             errors.append(route + ': archive text changed')
     # Existing homepage destinations must all remain reachable from the redesign.
-    if not set(baseline['pages']['index.html']['links']).issubset(set(current['pages']['index.html']['links'])):
+    homepage_links = set(baseline['pages']['index.html']['links']) - set(repairs['text_only_links'])
+    if not homepage_links.issubset(set(current['pages']['index.html']['links'])):
         errors.append('Homepage archive destinations lost')
     return errors
 
