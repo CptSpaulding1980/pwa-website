@@ -59,7 +59,10 @@ def resolve_image_path(z_path, prefix=PREFIX):
                 path_part = f"{web_dir}/{f.name}" if web_dir else f.name
                 return f'{prefix}/img/{path_part}'
     
-    # Fallback: simple path replacement
+    # Published media can outlive a moved/missing read-only vault source.
+    for f in sorted((DOCS / 'img').rglob('*')):
+        if f.is_file() and f.name.lower() == basename.lower():
+            return '{}/{}'.format(prefix, f.relative_to(DOCS).as_posix())
     return z_path.replace('/z_Images/', f'{prefix}/img/')
 
 def fix_image_srcs(html, prefix=PREFIX):
@@ -72,40 +75,11 @@ def fix_image_srcs(html, prefix=PREFIX):
 def to_yaml(d):
     return yaml.dump(d, allow_unicode=True, default_flow_style=False, sort_keys=False)
 
-# --- HTML Templates ---
-
-HTML_HEAD = """<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title} | PWA</title>
-  <link rel="stylesheet" href="{prefix}/styles/main.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏟️</text></svg>">
-</head>
-<body>
-  <nav class="top-nav">
-    <a href="{prefix}/" class="nav-brand">🏟️ PWA</a>
-    <div class="nav-links">
-      <a href="{prefix}/events/">📅 Events</a>
-      <a href="{prefix}/wrestlers/">🤼 Wrestler</a>
-      <a href="{prefix}/championships/">🏆 Titles</a>
-      <a href="{prefix}/rankings/pwi-500/">⭐ PWI 500</a>
-    </div>
-  </nav>
-  <main class="content">
-"""
-
-HTML_FOOT = """  </main>
-  <footer class="site-footer">
-    <p>PWA — Professional Wrestling Association · Static Archive · 1982–2019</p>
-  </footer>
-</body>
-</html>"""
+# Shared HTML shell is maintained in presentation.py.
 
 def html_page(title, body, prefix=PREFIX):
-    head = HTML_HEAD.format(title=title, prefix=prefix)
-    return head + body + HTML_FOOT
+    from presentation import page
+    return page(title, body, prefix)
 
 def breadcrumb(parent_title, parent_url, current_title, prefix=PREFIX):
     if parent_url:
@@ -463,115 +437,62 @@ def process_championships(events):
     return all_champs
 
 
+# The maintained parser preserves raw HTML blocks, and emits semantic data tables.
+# It deliberately does not rewrite the actual archive values or wiki-link content.
 def markdown_to_html(text):
-    """Basic markdown -> HTML conversion (handles the common patterns used in PWA vault)."""
-    
-    def format_inline(t):
-        """Apply inline formatting: **bold**, *italic*"""
-        t = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', t)
-        t = re.sub(r'\*(.+?)\*', r'<em>\1</em>', t)
-        return t
-    
-    lines = text.split('\n')
-    out = []
-    in_table = False
-    in_list = False
-    in_blockquote = False
-    blockquote_lines = []
+    def inline(value):
+        value = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', value)
+        return re.sub(r'\*(.+?)\*', r'<em>\1</em>', value)
 
-    for line in lines:
-        # Blockquote
-        if line.startswith('>') and not in_blockquote:
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-            in_blockquote = True
-            blockquote_lines = [line[1:].strip()]
+    lines = text.splitlines()
+    result = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        if not stripped:
+            i += 1
             continue
-        elif in_blockquote:
-            if line.startswith('>'):
-                blockquote_lines.append(line[1:].strip())
-                continue
+        if stripped.startswith('|'):
+            rows = []
+            while i < len(lines) and lines[i].strip().startswith('|'):
+                cells = [c.strip() for c in lines[i].strip().split('|')[1:-1]]
+                rows.append(cells)
+                i += 1
+            if len(rows) > 1 and all(re.fullmatch(r':?-{3,}:?', c) for c in rows[1]):
+                headers = rows.pop(0)
+                rows.pop(0)
+                result.append('<table><thead><tr>' + ''.join('<th scope="col">' + inline(c) + '</th>' for c in headers) + '</tr></thead><tbody>')
             else:
-                out.append('<blockquote>')
-                for bl in blockquote_lines:
-                    out.append('  <p>{}</p>'.format(format_inline(bl)))
-                out.append('</blockquote>')
-                in_blockquote = False
-                blockquote_lines = []
-
-        # Headings
-        if line.startswith('### '):
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-            out.append('<h3>{}</h3>'.format(format_inline(line[4:])))
-        elif line.startswith('## '):
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-            out.append('<h2>{}</h2>'.format(format_inline(line[3:])))
-        elif line.startswith('# '):
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-            out.append('<h1>{}</h1>'.format(format_inline(line[2:])))
-        # Table
-        elif line.startswith('|') and '|' in line[1:]:
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-            cells = [c.strip() for c in line.split('|')[1:-1]]
-            if not in_table:
-                out.append('<table>')
-                if all(c.startswith('-') for c in cells):
-                    out.append('<thead><tr>{}</tr></thead>'.format(
-                        ''.join('<th>{}</th>'.format(format_inline(c)) for c in cells)))
-                else:
-                    out.append('<tr>{}</tr>'.format(
-                        ''.join('<td>{}</td>'.format(format_inline(c)) for c in cells)))
-                in_table = True
-            else:
-                out.append('<tr>{}</tr>'.format(
-                    ''.join('<td>{}</td>'.format(format_inline(c)) for c in cells)))
-        elif in_table and not line.startswith('|'):
-            out.append('</table>')
-            in_table = False
-            if line.strip():
-                out.append('<p>{}</p>'.format(line))
-        # List items
-        elif line.startswith('- '):
-            if not in_list:
-                out.append('<ul>')
-                in_list = True
-            out.append('<li>{}</li>'.format(format_inline(line[2:])))
-        elif in_list and not line.startswith('- '):
-            if line.strip():
-                out.append('</ul>')
-                in_list = False
-                out.append('<p>{}</p>'.format(format_inline(line)))
-            else:
-                out.append('</ul>')
-                in_list = False
-        # Paragraphs
-        elif line.strip():
-            out.append('<p>{}</p>'.format(format_inline(line)))
+                result.append('<table><tbody>')
+            for row in rows:
+                result.append('<tr>' + ''.join('<td>' + inline(c) + '</td>' for c in row) + '</tr>')
+            result.append('</tbody></table>')
+            continue
+        if stripped.startswith('- '):
+            result.append('<ul>')
+            while i < len(lines) and lines[i].strip().startswith('- '):
+                result.append('<li>' + inline(lines[i].strip()[2:]) + '</li>')
+                i += 1
+            result.append('</ul>')
+            continue
+        if stripped.startswith('>'):
+            result.append('<blockquote>')
+            while i < len(lines) and lines[i].strip().startswith('>'):
+                result.append('<p>' + inline(lines[i].strip()[1:].strip()) + '</p>')
+                i += 1
+            result.append('</blockquote>')
+            continue
+        heading = re.match(r'^(#{1,6}) (.*)$', stripped)
+        if heading:
+            level = len(heading.group(1))
+            result.append('<h{0}>{1}</h{0}>'.format(level, inline(heading.group(2))))
+        elif re.match(r'</?(?:div|nav|p|img|table|section|article|iframe|video|source|ul|li|hr)\b', stripped):
+            result.append(line)
         else:
-            if in_list:
-                out.append('</ul>')
-                in_list = False
-
-    if in_list:
-        out.append('</ul>')
-    if in_table:
-        out.append('</table>')
-    if in_blockquote:
-        out.append('<blockquote>')
-        for bl in blockquote_lines:
-            out.append('  <p>{}</p>'.format(format_inline(bl)))
-        out.append('</blockquote>')
-
-    return '\n'.join(out)
+            result.append('<p>' + inline(line) + '</p>')
+        i += 1
+    return '\n'.join(result)
 
 
 def process_rankings():
@@ -676,44 +597,8 @@ def copy_images():
 
 
 def generate_homepage(events, wrestlers, champs):
-    # Latest 10 events
-    latest = sorted(events, key=lambda e: e['date'], reverse=True)[:10]
-    event_lines = []
-    for e in latest:
-        event_lines.append(
-            '<li><strong>{date}</strong> - <a href="{p}/events/{slug}/">{title}</a> - {venue} - {count} Matches</li>'.format(
-                date=e['date'], p=PREFIX, slug=e['slug'], title=e['title'],
-                venue=e['venue'], count=e['match_count']))
-
-    body = """<h1>PWA - Professional Wrestling Association</h1>
-<blockquote>
-<p>Die parallele Wrestling-Welt. Von den Anfaengen im NAWA-Territorium (1980)<br>
-ueber die Underground-Aera bis zur Renaissance 2015-2019.</p>
-</blockquote>
-<h2>Quick Stats</h2>
-<table>
-<thead><tr><th>Events</th><th>Wrestler</th><th>Championships</th></tr></thead>
-<tbody><tr><td><strong>{ne}</strong></td><td><strong>{nw}</strong></td><td><strong>{nc}</strong></td></tr></tbody>
-</table>
-<h2>Latest Events</h2>
-<ul>
-{event_list}
-</ul>
-<h2>Navigation</h2>
-<ul>
-<li><a href="{p}/events/">All Events</a> — {ne} shows from 1982–2019</li>
-<li><a href="{p}/wrestlers/">Wrestler Index</a> — {nw} superstars</li>
-<li><a href="{p}/championships/">Championships</a> — Title histories</li>
-<li><a href="{p}/rankings/pwi-500/">PWI Power Ranking</a> — Official rankings</li>
-<li><a href="{p}/rankings/top-25-matches/">Top 25 Matches</a> — Best rated</li>
-<li><a href="{p}/rankings/worst-25-matches/">Worst 25 Matches</a> — Lowest rated</li>
-</ul>
-<hr>
-<p><small>PWA Static Site — Generated {gen}</small></p>""".format(
-        ne=len(events), nw=len(wrestlers), nc=len(champs),
-        event_list='\n'.join(event_lines), p=PREFIX,
-        gen=datetime.now().strftime('%Y-%m-%d %H:%M'))
-
+    from magazine import homepage
+    body = homepage(events, wrestlers, champs, DOCS, PREFIX)
     (DOCS / "index.html").write_text(html_page('PWA - Professional Wrestling Association', body), encoding='utf-8')
 
 
@@ -754,8 +639,34 @@ def generate_index_pages(events, wrestlers, champs):
     (DOCS / "championships" / "index.html").write_text(html_page('Championships', body), encoding='utf-8')
 
 
+def preserve_published_archive(events, wrestlers):
+    """Retain four already-public records absent from the current read-only vault.
+
+    This explicit source snapshot prevents a redesign/rebuild from deleting canon.
+    A restored vault source always takes precedence over its archival fallback.
+    """
+    groups = {'events': list(events), 'wrestlers': list(wrestlers)}
+    for item in json.loads((REPO / 'content' / 'published-legacy.json').read_text(encoding='utf-8')):
+        group = groups[item['kind']]
+        record = item['record']
+        if any(row['slug'] == record['slug'] for row in group):
+            continue
+        group.append(record)
+        target = DOCS / item['kind'] / record['slug']
+        target.mkdir(parents=True, exist_ok=True)
+        title = record.get('title', record.get('name', 'PWA'))
+        (target / 'index.html').write_text(html_page(title, item['body']), encoding='utf-8')
+    groups['events'].sort(key=lambda row: row['date'], reverse=True)
+    groups['wrestlers'].sort(key=lambda row: row['name'])
+    for name, values in groups.items():
+        (DOCS / (name + '.json')).write_text(json.dumps(values, indent=2, ensure_ascii=False), encoding='utf-8')
+    return groups['events'], groups['wrestlers']
+
+
 def main():
     print("=== PWA Data Pipeline ===")
+    (DOCS / 'styles').mkdir(parents=True, exist_ok=True)
+    shutil.copy2(REPO / 'assets' / 'styles' / 'main.css', DOCS / 'styles' / 'main.css')
 
     print("Copying images...")
     copy_images()
@@ -776,6 +687,9 @@ def main():
     print("Processing rankings...")
     process_rankings()
     print("  -> Done")
+
+    print("Preserving published archive records...")
+    events, wrestlers = preserve_published_archive(events, wrestlers)
 
     print("Generating homepage...")
     generate_homepage(events, wrestlers, champs)

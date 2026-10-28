@@ -1,2 +1,6 @@
 node_modules/
 .DS_Store
+__pycache__/
+*.pyc
+# Local before/after evidence is versioned in the Nextcloud release archive.
+evidence/
