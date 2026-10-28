@@ -17,6 +17,12 @@ API = 'https://api.github.com/repos/CptSpaulding1980/pwa-website'
 LIVE = 'https://cptspaulding1980.github.io/pwa-website/'
 
 
+def select_pages_run(runs, sha, workflow_ids):
+    """Workflow IDs are stable; legacy Pages run and workflow names differ."""
+    exact = [run for run in runs if run['head_sha'] == sha and run['workflow_id'] in workflow_ids]
+    return max(exact, key=lambda run: run['id']) if exact else None
+
+
 def main():
     sha = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     raw = subprocess.run(['git','credential','fill'],input='protocol=https\nhost=github.com\n\n', text=True, capture_output=True, check=True)
@@ -29,12 +35,14 @@ def main():
             return json.load(response)
     pages = api('/pages')
     assert pages['source'] == {'branch':'main','path':'/docs'}, pages['source']
+    workflows = api('/actions/workflows')['workflows']
+    workflow_ids = {workflow['id'] for workflow in workflows if workflow['path'] == 'dynamic/pages/pages-build-deployment' or workflow['name'] == 'pages-build-deployment'}
+    assert workflow_ids, 'No Pages workflow discovered'
     selected = None
     for attempt in range(90):
         runs = api('/actions/runs?head_sha=' + sha + '&per_page=30')['workflow_runs']
-        exact = [run for run in runs if run['head_sha'] == sha and run['name'] == 'pages-build-deployment']
-        if exact:
-            selected = max(exact, key=lambda run: run['id'])
+        selected = select_pages_run(runs, sha, workflow_ids)
+        if selected:
             print('Pages',selected['id'],selected['status'],selected['conclusion'],flush=True)
             if selected['status'] == 'completed':
                 assert selected['conclusion'] == 'success', selected['html_url']

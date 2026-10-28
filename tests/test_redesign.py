@@ -78,5 +78,14 @@ class HomepageTests(unittest.TestCase):
         self.assertFalse(soup.select('a a'))
         self.assertEqual(soup.select_one('.nav-links a[aria-current]')['href'], '/pwa-website/')
 
+class DeploymentTests(unittest.TestCase):
+    def test_pages_run_selected_by_workflow_id_not_different_display_name(self):
+        from tools.verify_deployment import select_pages_run
+        # GitHub's observed workflow name and run display name are different.
+        runs = [{'id': 40736594512, 'name': 'pages build and deployment', 'head_sha':'exact', 'workflow_id':305170771},
+                {'id': 40736594513, 'name': 'pages-build-deployment', 'head_sha':'other', 'workflow_id':305170771}]
+        self.assertEqual(select_pages_run(runs, 'exact', {305170771})['id'],40736594512)
+        self.assertIsNone(select_pages_run(runs, 'missing', {305170771}))
+
 if __name__ == '__main__':
     unittest.main()
