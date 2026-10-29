@@ -3,7 +3,7 @@ from html import escape
 import re
 
 PREFIX = '/pwa-website'
-NAV = [('Start', '/'), ('Events', '/events/'), ('Wrestler', '/wrestlers/'), ('Championships', '/championships/'), ('Rankings', '/rankings/pwi-500/'), ('Match-Statistik', '/rankings/top-25-matches/')]
+NAV = [('Start', '/'), ('Events', '/events/'), ('Wrestler', '/wrestlers/'), ('Championships', '/championships/'), ('Rankings', '/rankings/pwi-500/'), ('Statistiken', '/rankings/top-25-matches/')]
 
 
 def page(title, body, prefix=PREFIX):
@@ -17,7 +17,9 @@ def page(title, body, prefix=PREFIX):
     def table_region(m):
         return '<div class="table-scroll" role="region" tabindex="0" aria-label="Datentabelle – horizontal scrollbar">' + m.group(0) + '</div>'
     body = re.sub(r'<table\b[^>]*>.*?</table>', table_region, body, flags=re.S)
-    if title == 'PWA - Professional Wrestling Association':
+    if title == 'Statistiken':
+        family = 'statistics'
+    elif title == 'PWA - Professional Wrestling Association':
         family = 'home'
     elif 'match-card' in body or 'class="event-list"' in body or 'href="' + prefix + '/events/"' in body:
         family = 'events'
@@ -33,6 +35,7 @@ def page(title, body, prefix=PREFIX):
     for label, href in NAV:
         active = ((family == 'home' and href == '/') or
                   (family != 'home' and href == '/' + family + '/') or
+                  (family == 'statistics' and 'top-25' in href) or
                   (family == 'rankings' and ('pwi-500' in href if 'Ranking' in title else 'top-25' in href)))
         links.append('<a href="{}{}"{}>{}</a>'.format(prefix, href, ' aria-current="page"' if active else '', label))
     return '''<!DOCTYPE html>
@@ -58,6 +61,6 @@ def page(title, body, prefix=PREFIX):
 <main id="main-content" class="content" tabindex="-1">
 {body}
 </main>
-<footer class="site-footer"><strong>PWA · Professional Wrestling Association</strong><p>Das Wrestling-Archiv · Ergebnisse, Titelhistorien &amp; Rankings</p><a href="{prefix}/events/">Events entdecken</a><a href="{prefix}/rankings/worst-25-matches/">Worst 25 Matches</a></footer>
+<footer class="site-footer"><strong>PWA · Professional Wrestling Association</strong><p>Das Wrestling-Archiv · Ergebnisse, Titelhistorien &amp; Rankings</p><a href="{prefix}/events/">Events entdecken</a><a href="{prefix}/rankings/top-25-matches/">Statistiken</a></footer>
 </body></html>
 '''.format(title=escape(title), prefix=prefix, family=family, nav=''.join(links), body=body)

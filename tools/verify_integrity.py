@@ -11,10 +11,20 @@ from content_audit import inventory
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def compare(baseline, current):
+def compare(baseline, current, statistics=None):
     errors = []
-    if baseline['data'] != current['data']:
+    protected_data = {k:v for k,v in current['data'].items() if not statistics or k != 'statistics.json'}
+    if baseline['data'] != protected_data:
         errors.append('JSON event/wrestler/championship records changed')
+    if statistics:
+        if current['data'].get('statistics.json') != statistics['data']:
+            errors.append('Statistics JSON differs from exact source-derived dataset')
+        for route, expected in statistics['pages'].items():
+            if current['pages'].get(route) != expected:
+                errors.append(route + ': differs from exact statistics rendering')
+        extra = set(current['pages']) - set(baseline['pages']) - set(statistics['pages'])
+        if extra:
+            errors.append('Unexpected new pages: ' + str(sorted(extra)))
     if baseline['assets'] != current['assets']:
         errors.append('Original image bytes changed')
     missing = sorted(set(baseline['pages']) - set(current['pages']))
@@ -27,7 +37,7 @@ def compare(baseline, current):
     from urllib.parse import quote
     for route, old in baseline['pages'].items():
         new = current['pages'].get(route)
-        if new is None or route == 'index.html':
+        if new is None or route == 'index.html' or (statistics and route in statistics['pages']):
             continue
         for key in ['links', 'media', 'matches']:
             expected = old[key]
@@ -85,7 +95,8 @@ def main():
     args = parser.parse_args()
     baseline = json.loads(Path(args.baseline).read_text())
     current = inventory(ROOT / 'docs')
-    errors = compare(baseline, current)
+    from statistics_gate import expectation
+    errors = compare(baseline, current, statistics=expectation())
     health = link_health(ROOT / 'docs')
     errors.extend(health['shell_errors'])
     known_missing = set()

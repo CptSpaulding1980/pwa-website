@@ -580,23 +580,14 @@ def process_rankings():
         out_sub.mkdir(parents=True, exist_ok=True)
         (out_sub / "index.html").write_text(html_page('PWI Power Ranking', pwi_body), encoding='utf-8')
 
-    for name in ['Top 25 Matches', 'Worst 25 Matches']:
-        src = VAULT / "Statistiken" / "{}.md".format(name)
-        if not src.exists():
-            continue
-        text = src.read_text(encoding='utf-8')
-        _, body = parse_frontmatter(text)
-        body = strip_dataview_blocks(body)
-        body = convert_inline_dataview(body)
-        body = convert_wikilinks(body)
+    from match_statistics import collect, render, ROUTES
+    statistics = collect(VAULT, REPO / 'content/published-legacy.json')
+    (DOCS / 'statistics.json').write_text(json.dumps(statistics, ensure_ascii=False, indent=2), encoding='utf-8')
+    for kind, (_, slug) in ROUTES.items():
+        target = DOCS / 'rankings' / slug
+        target.mkdir(parents=True, exist_ok=True)
+        (target / 'index.html').write_text(html_page('Statistiken', render(statistics, kind, PREFIX)), encoding='utf-8')
 
-        slug = name.lower().replace(' ', '-')
-        out_sub = DOCS / "rankings" / slug
-        out_sub.mkdir(parents=True, exist_ok=True)
-
-        html_body = markdown_to_html('{}\n{}'.format(
-            breadcrumb('Rankings', '/rankings/', name), body))
-        (out_sub / "index.html").write_text(html_page(name, html_body), encoding='utf-8')
 
 
 def copy_images():
