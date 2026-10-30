@@ -24,7 +24,7 @@ def inventory(root):
             'links': sorted(a.get('href', '') for a in main.find_all('a')),
             'media': sorted(x.get('src', '') for x in main.find_all(['img', 'video', 'source', 'iframe'])),
         }
-    return {'pages': pages, 'assets': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'img').rglob('*')) if p.is_file()},
+    return {'videos': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'video').rglob('*')) if p.is_file()}, 'pages': pages, 'assets': {str(p.relative_to(root)): digest(p) for p in sorted((root / 'img').rglob('*')) if p.is_file()},
             'data': {p.name: json.loads(p.read_text()) for p in sorted(root.glob('*.json'))}}
 
 

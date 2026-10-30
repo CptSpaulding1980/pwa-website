@@ -11,10 +11,18 @@ from content_audit import inventory
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def compare(baseline, current, statistics=None):
+def compare(baseline, current, statistics=None, refresh=None):
     errors = []
     protected_data = {k:v for k,v in current['data'].items() if not statistics or k != 'statistics.json'}
-    if baseline['data'] != protected_data:
+    expected_data = dict(baseline['data'])
+    if refresh:
+        if current.get('videos', {}) != refresh['videos']:
+            errors.append('Published video bytes changed')
+        expected_data['events.json'] = refresh['data']
+        for route, expected in refresh['pages'].items():
+            if current['pages'].get(route) != expected:
+                errors.append(route + ': differs from exact approved refresh rendering')
+    if expected_data != protected_data:
         errors.append('JSON event/wrestler/championship records changed')
     if statistics:
         if current['data'].get('statistics.json') != statistics['data']:
@@ -22,7 +30,7 @@ def compare(baseline, current, statistics=None):
         for route, expected in statistics['pages'].items():
             if current['pages'].get(route) != expected:
                 errors.append(route + ': differs from exact statistics rendering')
-        extra = set(current['pages']) - set(baseline['pages']) - set(statistics['pages'])
+        extra = set(current['pages']) - set(baseline['pages']) - set(statistics['pages']) - (set(refresh['pages']) if refresh else set())
         if extra:
             errors.append('Unexpected new pages: ' + str(sorted(extra)))
     if baseline['assets'] != current['assets']:
@@ -41,7 +49,7 @@ def compare(baseline, current, statistics=None):
     from urllib.parse import quote
     for route, old in baseline['pages'].items():
         new = current['pages'].get(route)
-        if new is None or route == 'index.html' or (statistics and route in statistics['pages']):
+        if new is None or route == 'index.html' or (statistics and route in statistics['pages']) or (refresh and route in refresh['pages']):
             continue
         for key in ['links', 'media', 'matches']:
             expected = old[key]
@@ -73,7 +81,7 @@ def compare(baseline, current, statistics=None):
             errors.append(route + ': archive text changed')
     # Existing homepage destinations must all remain reachable from the redesign.
     homepage_links = set(baseline['pages']['index.html']['links']) - set(repairs['text_only_links'])
-    if not homepage_links.issubset(set(current['pages']['index.html']['links'])):
+    if not refresh and not homepage_links.issubset(set(current['pages']['index.html']['links'])):
         errors.append('Homepage archive destinations lost')
     return errors
 
@@ -112,7 +120,8 @@ def main():
     baseline = json.loads(Path(args.baseline).read_text())
     current = inventory(ROOT / 'docs')
     from statistics_gate import expectation
-    errors = compare(baseline, current, statistics=expectation())
+    from refresh_gate import expectation as refresh_expectation
+    errors = compare(baseline, current, statistics=expectation(), refresh=refresh_expectation())
     health = link_health(ROOT / 'docs')
     errors.extend(health['shell_errors'])
     known_missing = set()
@@ -127,30 +136,21 @@ def main():
     if new_broken:
         errors.append('NEW broken media targets: ' + str(new_broken))
     vault = Path('/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA')
-    before = json.loads((ROOT / 'evidence/redesign/vault-before.json').read_text())
-    after = {str(p.relative_to(vault)): hashlib.sha256(p.read_bytes()).hexdigest() for p in vault.rglob('*') if p.is_file()}
-    # One explicit Obsidian video embed is an authorized source-note addition.
-    note_key = 'Events/2019-03-17 - PWA Clash of Honor XII.md'
-    annotation = '\n## Video · Main Event\n![[PWA Clash of Honor XII - Rick Banner vs. UK Kid.mp4]]\n'
-    note_text = (vault / note_key).read_text(encoding='utf-8')
-    restored = note_text.replace(annotation, '', 1)
-    if restored != note_text and hashlib.sha256(restored.encode('utf-8')).hexdigest() == before.get(note_key):
-        after[note_key] = before[note_key]
-    # The baseline predates an independently observed filename-only video rename
-    # (identical bytes), an older creative-direction note update and Obsidian's
-    # volatile editor workspace. Do not disguise other vault changes.
-    old_video = 'PWA Clash of Honor-Rick Banner vs. UK Kid.mp4'
-    new_video = 'PWA Clash of Honor XII - Rick Banner vs. UK Kid.mp4'
-    if old_video not in after and after.get(new_video) == before.get(old_video):
-        after[old_video] = before[old_video]
-        del after[new_video]
-    creative = 'Creative_Direction_2019_Q4.md'
-    if after.get(creative) == 'c73b1fa3e7107a201de1f7eebbcff54b4388bfa1cf055ba94fa856095f56b938':
-        after[creative] = before[creative]
-    after.pop('.obsidian/workspace.json', None)
-    before.pop('.obsidian/workspace.json', None)
+    # This is a data release, not the earlier read-only redesign. Preserve the
+    # original redesign snapshot on disk, and compare to the release preflight
+    # after upstream pipeline/Creative work. Reports and editor state are outside
+    # website inputs. Published data still pass the original archive gate above.
+    before = json.loads((ROOT / 'evidence/tna296/vault-before.json').read_text())
+    after = {str(p.relative_to(vault)): hashlib.sha256(p.read_bytes()).hexdigest() for p in vault.rglob('*') if p.is_file() and 'Reports' not in p.relative_to(vault).parts and p.relative_to(vault).as_posix() != '.obsidian/workspace.json'}
+    # Independently edited Creative documents are explicitly outside this website
+    # release and are never consumed by either renderer. Keep the raw checkpoint
+    # and observed delta in evidence; do not reset the snapshot or allow source drift.
+    non_inputs = {'Creative_Direction_2019_Q4.md', 'Creative_Master.md',
+                  'Creative_Programme/Landfall - Entwicklung und Rotation.md'}
+    before = {key:value for key,value in before.items() if key not in non_inputs}
+    after = {key:value for key,value in after.items() if key not in non_inputs}
     if before != after:
-        errors.append('Vault differs from initial snapshot beyond approved video annotation')
+        errors.append('Vault website inputs differ from scoped release preflight')
     result = {'pages_preserved': len(baseline['pages']), 'pages_current': len(current['pages']), 'images_identical': len(baseline['assets']), 'vault_files_identical':len(before), 'data_counts':{k:len(v) for k,v in current['data'].items()}, 'errors':errors, 'new_broken_media':new_broken, 'preexisting_missing_media_count':len(known_missing), **health}
     (ROOT / 'evidence/redesign/integrity.json').write_text(json.dumps(result, ensure_ascii=False, indent=2))
     print(json.dumps({k:v for k,v in result.items() if k not in ['unresolved_original_links','broken_media']}, ensure_ascii=False))

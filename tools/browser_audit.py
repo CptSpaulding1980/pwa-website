@@ -9,7 +9,7 @@ from urllib.parse import unquote
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ['', 'events/', 'events/2019-10-03-pwa-power-hour-31/', 'wrestlers/', 'wrestlers/ox-hemlock/', 'championships/', 'championships/pwa-world-heavyweight-championship/', 'rankings/pwi-500/', 'rankings/top-25-matches/', 'rankings/worst-25-matches/']
+PAGES = ['', 'events/2019-10-08-pwa-tuesday-night-action-296-landfall/', 'events/2019-03-17-pwa-clash-of-honor-xii/', 'events/', 'events/2019-10-03-pwa-power-hour-31/', 'wrestlers/', 'wrestlers/ox-hemlock/', 'championships/', 'championships/pwa-world-heavyweight-championship/', 'rankings/pwi-500/', 'rankings/top-25-matches/', 'rankings/worst-25-matches/']
 
 class Handler(SimpleHTTPRequestHandler):
     def translate_path(self, path):

@@ -701,6 +701,14 @@ def preserve_published_archive(events, wrestlers):
 
 
 def main():
+    # Explicit approved incremental publication; upstream full refresh remains
+    # quarantined until historical source reconciliation is complete.
+    from scoped_refresh import build_release
+    build_release()
+
+
+def full_pipeline_preview():
+    """Unscoped generator retained for future reconciled-source development only."""
     print("=== PWA Data Pipeline ===")
     (DOCS / 'styles').mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO / 'assets' / 'styles' / 'main.css', DOCS / 'styles' / 'main.css')

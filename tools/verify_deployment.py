@@ -52,18 +52,11 @@ def main():
         time.sleep(10)
     else:
         raise RuntimeError('Exact-SHA Pages run not successful within 15 minutes')
-    paths = set((ROOT / 'docs').glob('*.json'))
-    paths.update((ROOT / 'docs').rglob('*.html'))
-    paths.add(ROOT / 'docs/styles/main.css')
-    paths.update(ROOT / 'docs' / name for name in [
-        'img/PWA_2019-ff.png', 'img/Banner_PWA_YouTube.png',
-        'img/wrestler/Ox_Hemlock.PNG', 'img/charts/ox-hemlock_donut.png',
-        'img/posters/2019-09-21 - PWA Team Wars 2019.png'])
-    paths.update((ROOT / 'docs/img/championships').glob('*'))
-    repairs = json.loads((ROOT / 'content/source-repairs.json').read_text())
-    paths.update(ROOT / 'docs' / url.removeprefix('/pwa-website/')
-                 for url in repairs['media'].values())
-    paths.update((ROOT / 'docs/video').glob('*.mp4'))
+    # Full published tree, including every historical image and both videos.
+    # Use Git's exact publication manifest: ignored local files are not deployed.
+    tracked = subprocess.check_output(['git','ls-files','-z','docs'], cwd=ROOT).decode().split('\0')
+    paths = {ROOT / name for name in tracked if name}
+    assert paths and all(path.is_file() for path in paths)
     def check(path):
         relative = path.relative_to(ROOT / 'docs').as_posix()
         expected = hashlib.sha256(path.read_bytes()).hexdigest()

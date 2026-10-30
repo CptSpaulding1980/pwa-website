@@ -42,10 +42,10 @@ class DatasetTests(unittest.TestCase):
         import match_statistics as stats
         import build
         data = stats.collect(build.VAULT, build.REPO/'content/published-legacy.json')
-        self.assertEqual(data['summary']['events'],237, 'Duplicate event alias must not count twice')
-        self.assertEqual(data['summary']['event_urls'],238)
-        self.assertEqual(data['summary']['records'],875)
-        self.assertEqual(data['summary']['matches'],872)
+        self.assertEqual(data['summary']['events'],238, 'Published population plus Landfall; audited alias must not count twice')
+        self.assertEqual(data['summary']['event_urls'],239)
+        self.assertEqual(data['summary']['records'],878)
+        self.assertEqual(data['summary']['matches'],875)
         self.assertEqual(data['summary']['segments'],3)
         self.assertEqual(data['summary']['duplicates_removed'],3)
         self.assertEqual(data['rankings']['worst'][0]['rating'],36)
@@ -58,12 +58,12 @@ class DatasetTests(unittest.TestCase):
         import json
         import statistics
         data = stats.collect(build.VAULT, build.REPO / 'content/published-legacy.json')
-        self.assertEqual(data['summary']['events'], 237)
-        self.assertEqual(data['summary']['records'], 875)
-        self.assertEqual(data['summary']['rated'], 863)
-        self.assertEqual(data['summary']['timed'], 858)
-        self.assertEqual(data['summary']['duration_status'], {'valid':858,'zero':7,'invalid':1,'missing':6})
-        self.assertEqual(len({(r['event'],r['number']) for r in data['records']}), 875)
+        self.assertEqual(data['summary']['events'], 238)
+        self.assertEqual(data['summary']['records'], 878)
+        self.assertEqual(data['summary']['rated'], 866)
+        self.assertEqual(data['summary']['timed'], 861)
+        self.assertEqual(data['summary']['duration_status'], {'valid':861,'zero':7,'invalid':1,'missing':6})
+        self.assertEqual(len({(r['event'],r['number']) for r in data['records']}), 878)
         matches = [r for r in data['records'] if r['kind']=='match']
         ratings = [r['rating'] for r in matches if r['rating'] is not None]
         seconds = [r['seconds'] for r in matches if r['seconds'] is not None]
@@ -93,7 +93,8 @@ class RenderingTests(unittest.TestCase):
             self.assertEqual(len(soup.select('tbody tr')),25)
             self.assertEqual(len(soup.select('.table-scroll[tabindex="0"][role="region"]')),1)
             self.assertFalse(soup.select('a a'))
-            self.assertIn('872', soup.get_text())
+            self.assertIn('875', soup.get_text())
+            self.assertIn('gesicherte veröffentlichte Archivstand', soup.get_text())
             self.assertIn('108:108', soup.get_text())
             for anchor in soup.select('main a[href]'):
                 url=anchor['href']
@@ -115,17 +116,19 @@ class IntegrityTests(unittest.TestCase):
         import inspect
         self.assertIn('statistics', inspect.signature(compare).parameters, 'Missing narrow statistics gate')
         from statistics_gate import expectation
+        from refresh_gate import expectation as refresh_expectation
         before = json.loads((build.REPO/'evidence/redesign/baseline-tracked.json').read_text())
         current = inventory(build.DOCS)
         allowed = expectation()
-        self.assertEqual(compare(before,current,statistics=allowed), [])
+        refresh = refresh_expectation()
+        self.assertEqual(compare(before,current,statistics=allowed,refresh=refresh), [])
         for section, route, field in [('pages','rankings/top-25-matches/index.html','text'),('pages','events/index.html','text')]:
             altered=copy.deepcopy(current)
             altered[section][route][field]+=' injected'
-            self.assertTrue(compare(before,altered,statistics=allowed))
+            self.assertTrue(compare(before,altered,statistics=allowed,refresh=refresh))
         altered=copy.deepcopy(current)
         altered['data']['statistics.json']['summary']['records']+=1
-        self.assertTrue(compare(before,altered,statistics=allowed))
+        self.assertTrue(compare(before,altered,statistics=allowed,refresh=refresh))
 
 class DurationTests(unittest.TestCase):
     def test_duration_normalization_and_exclusion_reasons(self):

@@ -1,25 +1,25 @@
 {
   "summary": {
-    "events": 237,
-    "records": 875,
-    "matches": 872,
+    "events": 238,
+    "records": 878,
+    "matches": 875,
     "segments": 3,
-    "rated": 863,
-    "timed": 858,
-    "rating_mean": 78.72537659327926,
+    "rated": 866,
+    "timed": 861,
+    "rating_mean": 78.73210161662817,
     "rating_median": 79.0,
-    "duration_mean": 1039.1771561771561,
-    "duration_median": 900.0,
+    "duration_mean": 1039.3298490127759,
+    "duration_median": 900,
     "duration_status": {
-      "valid": 858,
+      "valid": 861,
       "missing": 6,
       "invalid": 1,
       "zero": 7
     },
     "duplicates_removed": 3,
     "first_date": "1982-01-01",
-    "last_date": "2019-10-03",
-    "event_urls": 238
+    "last_date": "2019-10-08",
+    "event_urls": 239
   },
   "records": [
     {
@@ -14021,6 +14021,54 @@
       "source": "Events/2019-10-03 - PWA Power Hour 31.md",
       "name_format": "wiki",
       "kind": "match"
+    },
+    {
+      "number": 1,
+      "name": "Dynmite Smith Main Roster Exhibition: [[Mr. Suplex]] vs. [[Dynamite Smith]]",
+      "finish": "Mr. Suplex battled Dynamite Smith to a  time limit draw",
+      "rating": 78.0,
+      "stars": "★★★½",
+      "raw_time": "20:00",
+      "seconds": 1200,
+      "duration_status": "valid",
+      "event": "2019-10-08-pwa-tuesday-night-action-296-landfall",
+      "date": "2019-10-08",
+      "title": "PWA Tuesday Night Action 296 - Landfall",
+      "source": "Events/2019-10-08 - PWA Tuesday Night Action 296 - Landfall.md",
+      "name_format": "wiki",
+      "kind": "match"
+    },
+    {
+      "number": 2,
+      "name": "[[Falls Count Anywhere]]: [[Shingo Takagi]] vs. [[UK Kid]]",
+      "finish": "Shingo Takagi beat UK Kid in 13 Min 49 Sec with a Last of the Dragon",
+      "rating": 81.0,
+      "stars": "★★★¾",
+      "raw_time": "13:49",
+      "seconds": 829,
+      "duration_status": "valid",
+      "event": "2019-10-08-pwa-tuesday-night-action-296-landfall",
+      "date": "2019-10-08",
+      "title": "PWA Tuesday Night Action 296 - Landfall",
+      "source": "Events/2019-10-08 - PWA Tuesday Night Action 296 - Landfall.md",
+      "name_format": "wiki",
+      "kind": "match"
+    },
+    {
+      "number": 3,
+      "name": "[[Tundra Wurm]] vs. [[WALTER]]",
+      "finish": "WALTER beat Tundra Wurm in 20 Min 20 Sec with a Burning Lariat",
+      "rating": 83.0,
+      "stars": "★★★¾",
+      "raw_time": "20:20",
+      "seconds": 1220,
+      "duration_status": "valid",
+      "event": "2019-10-08-pwa-tuesday-night-action-296-landfall",
+      "date": "2019-10-08",
+      "title": "PWA Tuesday Night Action 296 - Landfall",
+      "source": "Events/2019-10-08 - PWA Tuesday Night Action 296 - Landfall.md",
+      "name_format": "wiki",
+      "kind": "match"
     }
   ],
   "rankings": {
@@ -15633,6 +15681,9 @@
       }
     ]
   },
+  "event_aliases": {
+    "2019-09-24-tuesday-night-action-294-the-ox-celebration": "2019-09-24-pwa-tuesday-night-action-294-the-ox-celebration"
+  },
   "excluded_alias_records": [
     {
       "number": 1,
@@ -15679,8 +15730,5 @@
       "source": "Events/2019-09-24 - Tuesday Night Action 294 - The Ox Celebration.md",
       "name_format": "wiki"
     }
-  ],
-  "event_aliases": {
-    "2019-09-24-tuesday-night-action-294-the-ox-celebration": "2019-09-24-pwa-tuesday-night-action-294-the-ox-celebration"
-  }
+  ]
 }

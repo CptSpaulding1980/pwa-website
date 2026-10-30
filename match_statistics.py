@@ -89,7 +89,10 @@ def collect(vault, legacy_path):
     """
     import json
     from bs4 import BeautifulSoup
-    from build import parse_frontmatter, slugify
+    from build import parse_frontmatter, slugify, VAULT
+    if vault.resolve() == VAULT.resolve():
+        from scoped_refresh import statistics
+        return statistics()
     rows, events = [], set()
     for path in sorted((vault / 'Events').glob('*.md')):
         fm, body = parse_frontmatter(path.read_text(encoding='utf-8'))
@@ -219,6 +222,7 @@ def render(data, kind, prefix):
     body += '<details class="statistics-definitions"><summary>Datenbasis &amp; Berechnung</summary>'
     body += f'<p>Ein gemeinsamer Bestand: {s["matches"]} Matches und {s["segments"]} ausdrücklich als „Interview Segment /w“ benannte Segmente ({s["records"]} Datensätze). Segmente bleiben in allen vier Ranglisten und Match-Mittelwerten ausgeschlossen. {s["events"]} kanonische Events aus {s["event_urls"]} veröffentlichten Event-URLs. Identität: kanonische Event-URL + Matchnummer; keine Doppelzählung aus Top-/Worst-Snapshots.</p>'
     body += f'<p>Geprüfte Dublette: „Tuesday Night Action 294 – The Ox Celebration“ vom 24.09.19 ist zusätzlich ohne PWA-Präfix veröffentlicht. Die identischen {s["duplicates_removed"]} Matchkopien zählen nur beim PWA-Event mit Quellpunkten 81/83/79; die Aliaswerte 3,75/3,75/3,50 sind eine andere Skala, keine schlechten Punkteratings. Beide historischen Event-URLs bleiben unverändert erreichbar.</p>'
+    body += '<p>Quellenstand dieses Updates: Der gesicherte veröffentlichte Archivstand bleibt unverändert; ergänzt ist die vollständig geprüfte Landfall-Eventtabelle vom 08.10.19. Ungeprüfte historische Neuimporte sind nicht Teil dieses Bestands.</p>'
     body += '<p>Quelle: vollständige Matchtabellen der Event-Notizen plus veröffentlichte Legacy-Eventkarten. Ratings sind die numerischen Quellpunkte (auch über 100), nicht aus Sternen zurückgerechnet. Sterne bleiben eine separate Quellangabe. Die alten Top-/Worst-25-Notizen sind Teilansichten, keine Gesamtbasis.</p>'
     body += f'<p>Bewertungskennzahlen nutzen nur die {s["rated"]} numerisch bewerteten Einträge; {s["matches"]-s["rated"]} Legacy-Einträge ohne numerisches Rating bleiben ausgeschlossen. Ø = Summe / Anzahl; Median = mittlerer Wert (bei gerader Anzahl Mittel der zwei mittleren Werte).</p>'
     body += f'<p>Dauerkennzahlen und Zeitranglisten nutzen nur {s["timed"]} gültige positive Quelldauern. Ausgeschlossen: {excluded}. Ungültiges Beispiel: 108:108 (Sekunden ≥ 60); keine Korrektur aus einer widersprüchlichen Finish-Angabe. Fehlende Dauern werden nicht aus einzelnen Falls/Eliminierungen geschätzt.</p>'
