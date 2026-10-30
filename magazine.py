@@ -9,7 +9,7 @@ def display_date(value):
     return '{}.{}.{}'.format(parts[2], parts[1], parts[0][-2:]) if len(parts) == 3 else value
 
 
-def homepage(events, wrestlers, champs, docs, prefix):
+def homepage(events, wrestlers, champs, docs, prefix, video=''):
     latest = sorted(events, key=lambda row: row['date'], reverse=True)[:10]
     events_html = []
     for event in latest:
@@ -47,8 +47,9 @@ def homepage(events, wrestlers, champs, docs, prefix):
     stats = ''.join('<a class="stat-item" href="{p}/{route}/"><strong>{n}</strong><span>{label} <span aria-hidden="true">↗</span></span></a>'.format(p=prefix, route=route, n=n, label=label) for route, n, label in [('events',len(events),'Events'), ('wrestlers',len(wrestlers),'Wrestler'), ('championships',len(champs),'Championships')])
     latest_date = display_date(latest[0]['date']) if latest else '–'
     return '''<section class="home-intro"><div><span class="eyebrow">Die parallele Wrestling-Welt</span><h1>Harte Matches.<br><span>Klare Fakten.</span></h1><p>Von den Anfängen im NAWA-Territorium über die Underground-Ära bis zur Renaissance: das PWA-Archiv auf einen Blick.</p></div><div class="archive-status"><span class="status-dot"></span> Letzter Eventstand<strong>{latest_date}</strong><a href="{p}/events/">Zum Eventarchiv ↗</a></div></section>
+{video}
 <div class="stats-strip">{stats}</div>
 <div class="magazine-grid"><section class="panel latest-panel"><div class="section-heading"><h2>Die letzten Events</h2><a href="{p}/events/">Alle Events ↗</a></div><div class="event-list">{events}</div></section>
 <aside class="panel ranking-panel"><span class="eyebrow">PWI Power Ranking</span><h2>Die Top 5</h2><div class="ranking-preview"><table><thead><tr><th scope="col">#</th><th scope="col">Wrestler</th><th scope="col">Pts</th></tr></thead><tbody>{ranks}</tbody></table></div><a class="button" href="{p}/rankings/pwi-500/">Komplettes Ranking ↗</a><div class="stat-links"><a href="{p}/rankings/top-25-matches/">Statistiken ↗</a><a href="{p}/rankings/worst-25-matches/">Worst 25 Matches ↗</a></div></aside></div>
 <section class="panel champions-panel"><div class="section-heading"><div><span class="eyebrow">Titelträger laut Archiv</span><h2>Die Champions</h2></div><a href="{p}/championships/">Alle Titelhistorien ↗</a></div><div class="champion-grid">{champions}</div></section>
-{feature}'''.format(p=prefix, latest_date=latest_date, stats=stats, events=''.join(events_html), ranks=''.join(rank_rows), champions=''.join(champions_html), feature=feature)
+{feature}'''.format(p=prefix, latest_date=latest_date, video=video, stats=stats, events=''.join(events_html), ranks=''.join(rank_rows), champions=''.join(champions_html), feature=feature)

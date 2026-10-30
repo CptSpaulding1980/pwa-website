@@ -16,9 +16,31 @@ Requires Python 3.9+ and PyYAML. On the current Mac, `/usr/bin/python3` has PyYA
 do not assume the separately installed default pip belongs to this interpreter.
 No Node, Eleventy, Sass, external fonts or client-side JavaScript are used.
 
-The generator reads the **read-only** Nextcloud Obsidian vault at
+The generator reads the Nextcloud Obsidian vault at
 `/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA`.
-It writes complete HTML and copies maintained CSS to `docs/`.
+It writes complete HTML and copies maintained CSS to `docs/`. The only permitted
+vault write is restoration of a validated event-video embed in its matching note.
+
+## Videos
+
+The homepage video is Hendrik's explicitly designated Nextcloud fileid **449397**
+(`files/Videos/ElevenLabs_video_seedance-2-5_A dynamic, high_2026-10-28T21_12_00.mp4`).
+The source and its published copy are pinned by SHA-256; if the source changes,
+publication fails rather than silently substituting footage. No autoplay or poster.
+
+Event videos are discovered recursively *only* inside the PWA vault, and assigned
+only if the video filename begins with the exact event title followed by ` - `
+and the rest exactly matches a participant pairing on that event's match card.
+Multiple candidate events are an error; CSW/namesake video files are not imported.
+The generator maintains a valid Obsidian `![[video.mp4]]` embed in a matched event
+note (and scans that one changed note with Nextcloud occ), so a later note rewrite
+can be repaired on the next build without modifying its match results. For this
+event the original 197,920,860-byte MP4 remains untouched in the vault; a 480p
+H.264/AAC two-pass 560k/80k publication (85,703,383 bytes) is checked into
+`docs/video/`, below GitHub's 100 MB per-file limit. Future videos use the same
+encoding when no publication exists. Rebuilds reuse existing media, verify the
+approved source and output hashes, and do not generate posters. Run `build.py`
+after any external PWA vault-note regeneration to restore media annotations.
 
 ## Maintained sources
 

@@ -6,11 +6,13 @@ Generates complete HTML — no Eleventy needed at runtime.
 import os, re, yaml, shutil, json
 from pathlib import Path
 from datetime import datetime
+from event_media import discover, ensure_note_embed, event_player, homepage_player
 
 REPO = Path(__file__).resolve().parent
 VAULT = Path("/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA")
 DOCS = REPO / "docs"
 PREFIX = "/pwa-website"
+HOME_VIDEO = Path('/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Videos/ElevenLabs_video_seedance-2-5_A dynamic, high_2026-10-28T21_12_00.mp4')  # Nextcloud fileid 449397, explicitly identified by Hendrik.
 
 # Exact source-audited exceptions only; never infer identities from filenames.
 from urllib.parse import quote
@@ -189,6 +191,12 @@ def process_events():
     output_dir = DOCS / "events"
     output_dir.mkdir(parents=True, exist_ok=True)
     all_events = []
+    event_rows = []
+    for note in sorted(events_dir.glob('*.md')):
+        frontmatter, _ = parse_frontmatter(note.read_text(encoding='utf-8'))
+        if frontmatter.get('title'):
+            event_rows.append((str(frontmatter.get('date', '')), frontmatter['title'], frontmatter.get('matches', [])))
+    event_videos = discover(VAULT, event_rows)
 
     for md_file in sorted(events_dir.glob("*.md")):
         text = md_file.read_text(encoding='utf-8')
@@ -252,6 +260,9 @@ def process_events():
         body += '<strong>Venue:</strong> {}<br>\n'.format(fm.get('venue', ''))
         body += '<strong>Location:</strong> {}\n'.format(fm.get('location', ''))
         body += '</div>\n{}\n</div>\n'.format(poster_html)
+        for video in event_videos.get(event_date, []):
+            ensure_note_embed(md_file, video)
+            body += event_player(video, event_date, DOCS, PREFIX)
         body += '<h2>Matches</h2>\n'
         body += '\n'.join(match_cards)
 
@@ -623,7 +634,8 @@ def copy_images():
 
 def generate_homepage(events, wrestlers, champs):
     from magazine import homepage
-    body = homepage(events, wrestlers, champs, DOCS, PREFIX)
+    body = homepage(events, wrestlers, champs, DOCS, PREFIX,
+                    homepage_player(HOME_VIDEO, DOCS, PREFIX))
     (DOCS / "index.html").write_text(html_page('PWA - Professional Wrestling Association', body), encoding='utf-8')
 
 

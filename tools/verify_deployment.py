@@ -63,6 +63,7 @@ def main():
     repairs = json.loads((ROOT / 'content/source-repairs.json').read_text())
     paths.update(ROOT / 'docs' / url.removeprefix('/pwa-website/')
                  for url in repairs['media'].values())
+    paths.update((ROOT / 'docs/video').glob('*.mp4'))
     def check(path):
         relative = path.relative_to(ROOT / 'docs').as_posix()
         expected = hashlib.sha256(path.read_bytes()).hexdigest()
