@@ -98,8 +98,12 @@ th{background:#20334c;color:#eff5ff;font-size:.74rem;font-weight:750;letter-spac
 @media(max-width:1050px){.statistics-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.statistics-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.statistics-card{padding:14px}.statistics-nav a{flex:1 1 44%;padding:9px 10px;font-size:.8rem}.statistics-card dd{font-size:1.75rem}}
 @media(max-width:360px){.statistics-card{padding:11px}.statistics-card dd{font-size:1.5rem}.statistics-card dt{font-size:.7rem}}
-/* Vault-backed video: native controls, no autoplay, and no generated poster. */
-.home-video,.event-video{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--red);padding:clamp(14px,3vw,28px);margin:24px 0;max-width:900px}
-.home-video h2,.event-video h2{margin:0 0 14px;font-size:clamp(1.25rem,2vw,1.8rem)}
-.home-video video,.event-video video{display:block;width:100%;height:auto;max-height:70vh;aspect-ratio:16/9;background:#090d17}
+/* Homepage promo blends into the layout; event players retain native controls. */
+.home-promo{position:relative;margin:24px 0;max-width:900px}
+.home-promo video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#090d17}
+.home-promo-toggle{position:absolute;right:10px;bottom:10px;border:1px solid var(--line);border-radius:4px;background:#090d17e8;color:var(--text);padding:7px 10px;font:inherit;font-size:.75rem;cursor:pointer;min-height:32px}
+.home-promo-toggle:focus-visible{outline:3px solid var(--warm);outline-offset:3px}
+.event-video{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--red);padding:clamp(14px,3vw,28px);margin:24px 0;max-width:900px}
+.event-video h2{margin:0 0 14px;font-size:clamp(1.25rem,2vw,1.8rem)}
+.event-video video{display:block;width:100%;height:auto;max-height:70vh;aspect-ratio:16/9;background:#090d17}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from bs4 import BeautifulSoup
-from event_media import discover, ensure_note_embed
+from event_media import discover, ensure_note_embed, homepage_player
 
 ROOT = Path(__file__).resolve().parents[1]
 VAULT = Path('/Volumes/SSD_4TB/nextcloud/app/data/hendrik/files/Obsidian/PWA')
@@ -38,6 +38,17 @@ class VideoTests(unittest.TestCase):
             self.assertIn('![[PWA Clash of Honor XII - Rick Banner vs. UK Kid.mp4]]', note.read_text())
             self.assertIn('Canonical matches', note.read_text())
 
+    def test_homepage_is_quiet_loop_not_event_player(self):
+        html = homepage_player(ROOT / 'docs/video/pwa-homepage.mp4', ROOT / 'docs', '/pwa-website')
+        soup = BeautifulSoup(html, 'html.parser')
+        video = soup.select_one('video')
+        for attribute in ['autoplay', 'loop', 'muted', 'playsinline']:
+            self.assertTrue(video.has_attr(attribute), attribute)
+        self.assertFalse(video.has_attr('controls'))
+        self.assertFalse(soup.select('h2, a'))
+        self.assertEqual(soup.select_one('button')['aria-controls'], video['id'])
+        self.assertIn('prefers-reduced-motion: reduce', html)
+
     def test_generated_players_and_sources(self):
         note = (VAULT / 'Events' / '2019-03-17 - PWA Clash of Honor XII.md').read_text()
         self.assertIn('![[PWA Clash of Honor XII - Rick Banner vs. UK Kid.mp4]]', note)
@@ -45,9 +56,18 @@ class VideoTests(unittest.TestCase):
                                (ROOT / 'docs/events' / EVENT / 'index.html',
                                 '2019-03-17-pwa-clash-of-honor-xii-rick-banner-vs-uk-kid.mp4')]:
             soup = BeautifulSoup(page.read_text(), 'html.parser')
-            players = soup.select('video[controls][preload="metadata"][aria-label]')
+            players = soup.select('video[aria-label]')
             self.assertEqual(len(players), 1, page)
-            self.assertIsNone(players[0].get('autoplay'))
+            if page == ROOT / 'docs/index.html':
+                for attribute in ['autoplay', 'loop', 'muted', 'playsinline']:
+                    self.assertTrue(players[0].has_attr(attribute), attribute)
+                self.assertFalse(players[0].has_attr('controls'))
+                self.assertFalse(soup.select('.home-video, .home-promo h2, .home-promo a'))
+            else:
+                self.assertTrue(players[0].has_attr('controls'))
+                self.assertEqual(players[0]['preload'], 'metadata')
+                self.assertFalse(players[0].has_attr('autoplay'))
+                self.assertFalse(players[0].has_attr('loop'))
             self.assertIsNone(players[0].get('poster'))
             source = players[0].select_one('source[type="video/mp4"]')
             self.assertEqual(source['src'], '/pwa-website/video/' + expected)

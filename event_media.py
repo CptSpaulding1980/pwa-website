@@ -117,9 +117,37 @@ def homepage_player(source, docs, prefix):
     if target.stat().st_size >= MAX_GITHUB_BYTES:
         raise ValueError('Homepage video exceeds GitHub file limit')
     url = escape(prefix + '/video/pwa-homepage.mp4', quote=True)
-    return ('<section class="home-video" aria-labelledby="home-video-title">'
-            '<div class="section-heading"><h2 id="home-video-title">PWA im Video</h2></div>'
-            '<video controls preload="metadata" playsinline aria-label="PWA – Homepage-Video">'
-            '<source src="{url}" type="video/mp4">'
-            'Dein Browser unterstützt kein HTML5-Video. <a href="{url}">Video herunterladen</a>.'
-            '</video></section>').format(url=url)
+    return ('''<div class="home-promo">
+<video id="home-promo-video" autoplay loop muted playsinline preload="metadata" aria-label="PWA – stummer Promo-Loop">
+<source src="''' + url + '''" type="video/mp4">
+Dein Browser unterstützt kein HTML5-Video.
+</video>
+<button class="home-promo-toggle" type="button" aria-controls="home-promo-video" hidden>Promo pausieren</button>
+</div>
+<script>
+(() => {
+  const video = document.getElementById('home-promo-video');
+  const button = document.querySelector('.home-promo-toggle');
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const update = () => {
+    button.textContent = video.paused ? 'Promo fortsetzen' : 'Promo pausieren';
+  };
+  const play = () => { video.play().catch(update); };
+  const preference = () => {
+    video.autoplay = !motion.matches;
+    if (motion.matches) video.pause();
+    else play();
+    update();
+  };
+  video.muted = true;
+  video.addEventListener('play', update);
+  video.addEventListener('pause', update);
+  button.addEventListener('click', () => {
+    if (video.paused) play();
+    else video.pause();
+  });
+  motion.addEventListener('change', preference);
+  preference();
+  button.hidden = false;
+})();
+</script>''')
